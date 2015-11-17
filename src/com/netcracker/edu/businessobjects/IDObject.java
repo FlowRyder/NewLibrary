@@ -13,4 +13,9 @@ public class IDObject {
     public int getId() {
         return id;
     }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 }

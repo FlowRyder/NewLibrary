@@ -14,10 +14,10 @@ public class Account extends IDObject {
     private Calendar issueDate;
     private Calendar returnDate;
 
-    public Account(Reader reader, Book book, boolean isActual, Calendar issueDate, Calendar returnDate) {
+    public Account(Reader reader, Book book, Calendar issueDate, Calendar returnDate) {
         setReader(reader);
         setBook(book);
-        setIsActual(isActual);
+        setIsActual(true);
         setIssueDate(issueDate);
         setReturnDate(returnDate);
     }
