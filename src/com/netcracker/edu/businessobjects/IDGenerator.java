@@ -1,11 +1,11 @@
 package com.netcracker.edu.businessobjects;
 
 /**
- * Created by FlowRyder on 13.11.2015.
+ * Created by FlowRyder on 25.11.2015.
  */
-public class ID {
+public class IDGenerator {
     private static int id;
-    private static final ID INSTANCE = new ID();
+    private static final IDGenerator INSTANCE = new IDGenerator();
 
     public static int evaluateId() {
         setId(getId() + 1);

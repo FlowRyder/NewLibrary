@@ -7,7 +7,7 @@ public class IDObject {
     private int id;
 
     public IDObject() {
-       id = ID.evaluateId();
+       id = IDGenerator.evaluateId();
     }
 
     public int getId() {
