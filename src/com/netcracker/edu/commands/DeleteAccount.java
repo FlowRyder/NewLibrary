@@ -2,6 +2,7 @@ package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Account;
 import com.netcracker.edu.dao.MemoryDAO;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,32 +11,31 @@ import java.io.InputStreamReader;
 /**
  * Created by FlowRyder on 14.11.2015.
  */
-public class DeleteAccount implements Command {
+public class DeleteAccount extends CommandDelete {
+    public static final Logger LOGGER = Logger.getLogger(DeleteAccount.class);
 
-    public void execute() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        int id;
-        System.out.println("Enter id of account:");
-        try {
-            id = Integer.getInteger(bufferedReader.readLine());
-        } catch (NullPointerException e) {
-            System.out.println("Invalid id format");
-            return;
-        }
-        Account account = MemoryDAO.getInstance().findAccountByID(id);
-        if (account != null) {
-            account.setIsActual(false);
-            System.out.println("Account was successfully deleted.");
-        } else {
-            System.out.println("There is no such account.");
-        }
+    @Override
+    public Account choose() {
+        LOGGER.info("Choose account");
+        return (Account) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getAccounts());
     }
 
+    @Override
+    public void execute() throws IOException {
+        Account account = choose();
+        MemoryDAO.getInstance().getAccounts().remove(account);
+        account.setIsActual(false);
+        MemoryDAO.getInstance().getAccounts().add(account);
+        LOGGER.info("Account successfully deleted.");
+    }
+
+    @Override
     public String getName() {
         return "delete_account";
     }
 
+    @Override
     public String getHelp() {
-        return "To delete account use:" + getName();
+        return "to delete account use " + getName();
     }
 }

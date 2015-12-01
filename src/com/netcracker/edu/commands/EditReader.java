@@ -2,41 +2,49 @@ package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Reader;
 import com.netcracker.edu.dao.MemoryDAO;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Created by FlowRyder on 25.11.2015.
  */
-public class EditReader implements Command {
-    public void execute() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        String login;
-        System.out.println("Enter login of reader:");
-        login = bufferedReader.readLine();
-        Reader reader = MemoryDAO.getInstance().findReaderByLogin(login);
-        if (reader != null) {
-            MemoryDAO.getInstance().getReaders().remove(reader);
-            System.out.println("Enter email of reader");
-            String email = bufferedReader.readLine();
-            reader.setEmail(email);
-            System.out.println("Enter password of reader");
-            String password = bufferedReader.readLine();
-            reader.setEmail(password);
-            MemoryDAO.getInstance().getReaders().add(reader);
-            System.out.println("Reader was successfully edited.");
-        } else {
-            System.out.println("There is no such reader.");
-        }
+public class EditReader extends CommandEdit {
+    public static final Logger LOGGER = Logger.getLogger(EditGenre.class);
+
+    @Override
+    public Reader edit() {
+        LOGGER.info("Choose reader:");
+        Reader reader = (Reader) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getReaders());
+        MemoryDAO.getInstance().getReaders().remove(reader);
+        Scanner scanner = new Scanner(System.in);
+        LOGGER.info("Enter name:");
+        reader.setName(scanner.nextLine());
+        LOGGER.info("Enter email:");
+        reader.setEmail(scanner.nextLine());
+        LOGGER.info("Enter login:");
+        reader.setLogin(scanner.nextLine());
+        LOGGER.info("Enter password:");
+        reader.setPassword(scanner.nextLine());
+        return reader;
     }
 
+    @Override
+    public void execute() {
+        MemoryDAO.getInstance().getReaders().add(edit());
+        LOGGER.info("Reader successfully edited.");
+    }
+
+    @Override
     public String getName() {
         return "edit_reader";
     }
 
+    @Override
     public String getHelp() {
-        return "To edit reader use:" + getName();
+        return "to edit reader use " + getName();
     }
 }

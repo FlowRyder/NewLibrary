@@ -1,36 +1,49 @@
 package com.netcracker.edu.commands;
 
-
 import com.netcracker.edu.businessobjects.Author;
 import com.netcracker.edu.dao.MemoryDAO;
-import com.netcracker.edu.util.Check;
+import com.netcracker.edu.util.Uniqueness;
+import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Created by FlowRyder on 17.11.2015.
  */
-public class AddAuthor implements Command {
-    public void execute() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        System.out.println("Enter name of author:");
-        String name = bufferedReader.readLine();
-        if (Check.containAuthor(name)) {
-            System.out.println("Author already exists.");
-            return;
+public class AddAuthor extends CommandAdd {
+    public static final Logger LOGGER = Logger.getLogger(AddAuthor.class);
+
+    @Override
+    public Author create() {
+        LOGGER.info("Enter author's name");
+        Scanner scanner = new Scanner(System.in);
+        String name = scanner.nextLine();
+        if (Uniqueness.isNonUnigue(name, MemoryDAO.getInstance().getAuthors())) {
+            LOGGER.info("Author already exists.");
         } else {
-            Author author = new Author(name);
-            MemoryDAO.getInstance().getAuthors().add(author);
+            return new Author(name);
         }
+        return null;
     }
 
+    @Override
+    public void execute() {
+        if (create() != null) {
+            MemoryDAO.getInstance().getAuthors().add(create());
+            LOGGER.info("Author successfully added");
+        } else {
+            LOGGER.info("Error: author already exists.");
+        }
+        MemoryDAO.getInstance().getAuthors().add(create());
+    }
+
+    @Override
     public String getName() {
         return "add_author";
     }
 
+    @Override
     public String getHelp() {
-        return "To add author use:" + getName();
+        return "to add author use " + getName();
     }
 }

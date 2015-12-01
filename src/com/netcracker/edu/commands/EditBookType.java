@@ -1,40 +1,50 @@
 package com.netcracker.edu.commands;
 
+import com.netcracker.edu.businessobjects.Author;
 import com.netcracker.edu.businessobjects.BookType;
+import com.netcracker.edu.businessobjects.Genre;
 import com.netcracker.edu.dao.MemoryDAO;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Created by FlowRyder on 25.11.2015.
  */
-public class EditBookType implements Command {
-    public void execute() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        String name;
-        System.out.println("Enter name of book type:");
-        name = bufferedReader.readLine();
-        BookType bookType = MemoryDAO.getInstance().findBookTypeByName(name);
-        if (bookType != null) {
-            String newName;
-            System.out.println("Enter new name of book type:");
-            newName = bufferedReader.readLine();
-            bookType.setName(newName);
-            MemoryDAO.getInstance().getBookTypes().remove(bookType);
-            MemoryDAO.getInstance().getBookTypes().add(bookType);
-            System.out.println("Book type was successfully edited.");
-        } else {
-            System.out.println("There is no such book type.");
-        }
+public class EditBookType extends CommandEdit {
+    public static final Logger LOGGER = Logger.getLogger(EditBookType.class);
+
+    @Override
+    public BookType edit() {
+        LOGGER.info("Choose book type:");
+        BookType bookType = (BookType) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getBookTypes());
+        MemoryDAO.getInstance().getBookTypes().remove(bookType);
+        Scanner scanner = new Scanner(System.in);
+        LOGGER.info("Enter name:");
+        bookType.setName(scanner.nextLine());
+        LOGGER.info("Choose author:");
+        bookType.setAuthor((Author) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getAuthors()));
+        LOGGER.info("Choose genre:");
+        bookType.setGenre((Genre) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getGenres()));
+        return bookType;
     }
 
+    @Override
+    public void execute() throws IOException {
+        MemoryDAO.getInstance().getBookTypes().add(edit());
+        LOGGER.info("Book type successfully edited.");
+    }
+
+    @Override
     public String getName() {
         return "edit_bookType";
     }
 
+    @Override
     public String getHelp() {
-        return "To edit book type use:" + getName();
+        return "to edit book type use " + getName();
     }
 }

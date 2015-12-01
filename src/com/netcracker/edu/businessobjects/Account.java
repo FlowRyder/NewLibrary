@@ -66,4 +66,9 @@ public class Account extends IDObject {
         Check.isNull(returnDate);
         this.returnDate = returnDate;
     }
+
+    @Override
+    public String toString() {
+        return reader.getName() + " " + book.getBookType().getName() + " [" + getId() + "]";
+    }
 }

@@ -21,4 +21,9 @@ public class Book extends IDObject {
     public BookType getBookType() {
         return bookType;
     }
+
+    @Override
+    public String toString() {
+        return bookType.getName() + " [" + getId() + "]";
+    }
 }

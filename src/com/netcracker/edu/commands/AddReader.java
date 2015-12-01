@@ -2,40 +2,43 @@ package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Reader;
 import com.netcracker.edu.dao.MemoryDAO;
+import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Created by FlowRyder on 25.11.2015.
  */
-public class AddReader implements Command {
-    public void execute() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        String login;
-        System.out.println("Enter login of reader:");
-        login = bufferedReader.readLine();
-        Reader reader = MemoryDAO.getInstance().findReaderByLogin(login);
-        if (reader == null) {
-            reader.setLogin(login);
-            System.out.println("Enter email of reader");
-            String email = bufferedReader.readLine();
-            reader.setEmail(email);
-            System.out.println("Enter password of reader");
-            String password = bufferedReader.readLine();
-            reader.setEmail(password);
-            MemoryDAO.getInstance().getReaders().add(reader);
-        } else {
-            System.out.println("Such reader has already added.");
-        }
+public class AddReader extends CommandAdd {
+    public static final Logger LOGGER = Logger.getLogger(AddReader.class);
+
+    @Override
+    public Reader create() {
+        Scanner scanner = new Scanner(System.in);
+        LOGGER.info("Enter name:");
+        String name = scanner.nextLine();
+        LOGGER.info("Enter login:");
+        String login = scanner.nextLine();
+        LOGGER.info("Enter email:");
+        String email = scanner.nextLine();
+        LOGGER.info("Enter password:");
+        String password = scanner.nextLine();
+        return new Reader(name, login, email, password);
     }
 
+    @Override
+    public void execute() {
+        MemoryDAO.getInstance().getReaders().add(create());
+        LOGGER.info("Reader successfully added.");
+    }
+
+    @Override
     public String getName() {
         return "add_reader";
     }
 
+    @Override
     public String getHelp() {
-        return "To add reader use:" + getName();
+        return "to add reader use " + getName();
     }
 }

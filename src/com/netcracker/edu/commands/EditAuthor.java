@@ -2,39 +2,43 @@ package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Author;
 import com.netcracker.edu.dao.MemoryDAO;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Created by FlowRyder on 25.11.2015.
  */
-public class EditAuthor implements Command {
-    public void execute() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        String name;
-        System.out.println("Enter name of author:");
-        name = bufferedReader.readLine();
-        Author author = MemoryDAO.getInstance().findAuthorByName(name);
-        if (author != null) {
-            String newName;
-            System.out.println("Enter new name of author:");
-            newName = bufferedReader.readLine();
-            author.setName(newName);
-            MemoryDAO.getInstance().getAuthors().remove(author);
-            MemoryDAO.getInstance().getAuthors().add(author);
-            System.out.println("Author was successfully edited.");
-        } else {
-            System.out.println("There is no such author.");
-        }
+public class EditAuthor extends CommandEdit {
+    public static final Logger LOGGER = Logger.getLogger(EditAuthor.class);
+
+    @Override
+    public Author edit() {
+        LOGGER.info("Choose author:");
+        Author author = (Author) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getAuthors());
+        MemoryDAO.getInstance().getAuthors().remove(author);
+        Scanner scanner = new Scanner(System.in);
+        LOGGER.info("Enter name:");
+        author.setName(scanner.nextLine());
+        return author;
     }
 
+    @Override
+    public void execute() throws IOException {
+        MemoryDAO.getInstance().getAuthors().add(edit());
+        LOGGER.info("Author successfully edited.");
+    }
+
+    @Override
     public String getName() {
         return "edit_author";
     }
 
+    @Override
     public String getHelp() {
-        return "To edit author use:" + getName();
+        return "to edit author use " + getName();
     }
 }

@@ -20,4 +20,9 @@ public class NamedObject extends IDObject {
         Check.isNullOrVoid(name);
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return getName() + " [" + getId() + "]";
+    }
 }

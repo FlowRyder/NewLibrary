@@ -32,4 +32,6 @@ public class BookType extends NamedObject {
         Check.isNull(author);
         this.author = author;
     }
+
+
 }

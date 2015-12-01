@@ -4,42 +4,42 @@ import com.netcracker.edu.businessobjects.Book;
 import com.netcracker.edu.businessobjects.BookType;
 import com.netcracker.edu.dao.MemoryDAO;
 import com.netcracker.edu.util.Choice;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * Created by FlowRyder on 25.11.2015.
  */
-public class EditBook implements Command {
-    public void execute() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        int id;
-        System.out.println("Enter id of book:");
-        try {
-            id = Integer.getInteger(bufferedReader.readLine());
-        } catch (NullPointerException e) {
-            System.out.println("Invalid id format");
-            return;
-        }
-        Book book = MemoryDAO.getInstance().findBookByID(id);
-        if (book != null) {
-            MemoryDAO.getInstance().getBooks().remove(book);
-            BookType bookType = Choice.chooseBookType();
-            book.setBookType(bookType);
-            MemoryDAO.getInstance().getBooks().add(book);
-            System.out.println("Book was successfully edited.");
-        } else {
-            System.out.println("There is no such book.");
-        }
+public class EditBook extends CommandEdit {
+    public static final Logger LOGGER = Logger.getLogger(EditBook.class);
+
+    @Override
+    public Book edit() {
+        LOGGER.info("Choose book:");
+        Book book = (Book) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getBooks());
+        MemoryDAO.getInstance().getBooks().remove(book);
+        LOGGER.info("Choose book type:");
+        book.setBookType((BookType) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getBookTypes()));
+        return book;
     }
 
+    @Override
+    public void execute() throws IOException {
+        MemoryDAO.getInstance().getBooks().add(edit());
+        LOGGER.info("Book successfully edited.");
+    }
+
+    @Override
     public String getName() {
         return "edit_book";
     }
 
+    @Override
     public String getHelp() {
-        return "To edit book use:" + getName();
+        return "to edit book use " + getName();
     }
 }
