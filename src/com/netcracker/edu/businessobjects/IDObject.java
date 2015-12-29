@@ -7,11 +7,15 @@ public class IDObject {
     private int id;
 
     public IDObject() {
-       id = IDGenerator.evaluateId();
+        id = IDGenerator.evaluateId();
     }
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
