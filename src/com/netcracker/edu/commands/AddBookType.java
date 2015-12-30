@@ -4,6 +4,7 @@ import com.netcracker.edu.businessobjects.Author;
 import com.netcracker.edu.businessobjects.BookType;
 import com.netcracker.edu.businessobjects.Genre;
 import com.netcracker.edu.businessobjects.IDObject;
+import com.netcracker.edu.dao.FileDAO;
 import com.netcracker.edu.dao.MemoryDAO;
 import com.netcracker.edu.util.Check;
 import com.netcracker.edu.util.Choice;
@@ -22,20 +23,19 @@ public class AddBookType extends CommandAdd {
     public static final Logger LOGGER = Logger.getLogger(AddBookType.class);
 
     @Override
-    public BookType create() {
-        Scanner scanner = new Scanner(System.in);
-        LOGGER.info("Enter book type's name:");
-        String name = scanner.nextLine();
-        LOGGER.info("Choose genre:");
-        Genre genre = (Genre) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getGenres());
-        LOGGER.info("Choose author:");
-        Author author = (Author) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getAuthors());
-        return new BookType(name, genre, author);
+    public BookType create(String[] parameters) {
+        Genre genre = (Genre) FileDAO.getInstance().choose(FileDAO.getInstance().getGenres(), Integer.parseInt(parameters[2]));
+        Author author = (Author) FileDAO.getInstance().choose(FileDAO.getInstance().getAuthors(), Integer.parseInt(parameters[3]));
+        return new BookType(parameters[1], genre, author);
     }
 
     @Override
-    public void execute() {
-        MemoryDAO.getInstance().getBookTypes().add(create());
+    public void execute(String[] parameters) {
+        if (parameters.length != 4) {
+            LOGGER.info("Wrong number of parameters.");
+            return;
+        }
+        MemoryDAO.getInstance().getBookTypes().add(create(parameters));
         LOGGER.info("Book type successfully added.");
     }
 
@@ -46,6 +46,6 @@ public class AddBookType extends CommandAdd {
 
     @Override
     public String getHelp() {
-        return "to add book type use " + getName();
+        return "to add book type use " + getName() + " booktype_name + genre_id + author_id";
     }
 }

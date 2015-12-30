@@ -1,6 +1,7 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Genre;
+import com.netcracker.edu.dao.FileDAO;
 import com.netcracker.edu.dao.MemoryDAO;
 import com.netcracker.edu.util.Uniqueness;
 import org.apache.log4j.Logger;
@@ -14,27 +15,28 @@ public class AddGenre extends CommandAdd {
     public static final Logger LOGGER = Logger.getLogger(AddGenre.class);
 
     @Override
-    public Genre create() {
-        Scanner scanner = new Scanner(System.in);
-        LOGGER.info("Enter genre's name:");
-        String name = scanner.nextLine();
-        if (Uniqueness.isNonUnigue(name, MemoryDAO.getInstance().getGenres())) {
+    public Genre create(String[] parameters) {
+        if (Uniqueness.isNonUnigue(parameters[1], FileDAO.getInstance().getGenres())) {
             LOGGER.info("Genre already exists.");
         } else {
-            return new Genre(scanner.nextLine());
+            return new Genre(parameters[1]);
         }
         return null;
     }
 
     @Override
-    public void execute() {
-        if (create() != null) {
-            MemoryDAO.getInstance().getGenres().add(create());
+    public void execute(String[] parameters) {
+        if (parameters.length != 2) {
+            LOGGER.info("Wrong number of parameters.");
+            return;
+        }
+        Genre genre = create(parameters);
+        if (genre != null) {
+            MemoryDAO.getInstance().getGenres().add(genre);
             LOGGER.info("Genre successfully added");
         } else {
             LOGGER.info("Error: genre already exists.");
         }
-        MemoryDAO.getInstance().getGenres().add(create());
     }
 
     @Override
@@ -44,6 +46,6 @@ public class AddGenre extends CommandAdd {
 
     @Override
     public String getHelp() {
-        return "to add genre use " + getName();
+        return "to add genre use " + getName() + " genres_name";
     }
 }

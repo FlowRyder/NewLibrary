@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Scanner;
 
 /**
  * Created by FlowRyder on 29.12.2015.
@@ -30,6 +31,15 @@ public class FileDAO {
         books = (Collection<Book>) Load.loadCollection("book");
         accounts = (Collection<Account>) Load.loadCollection("account");
         librarians = (Collection<Librarian>) Load.loadCollection("librarian");
+    }
+
+    public IDObject choose(Collection<? extends IDObject> collection, int id) {
+        for (IDObject idObject : collection) {
+            if (idObject.getId() == id) {
+                return idObject;
+            }
+        }
+        return null;
     }
 
     public static FileDAO getInstance() {

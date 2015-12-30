@@ -13,22 +13,17 @@ public class AddReader extends CommandAdd {
     public static final Logger LOGGER = Logger.getLogger(AddReader.class);
 
     @Override
-    public Reader create() {
-        Scanner scanner = new Scanner(System.in);
-        LOGGER.info("Enter name:");
-        String name = scanner.nextLine();
-        LOGGER.info("Enter login:");
-        String login = scanner.nextLine();
-        LOGGER.info("Enter email:");
-        String email = scanner.nextLine();
-        LOGGER.info("Enter password:");
-        String password = scanner.nextLine();
-        return new Reader(name, login, email, password);
+    public Reader create(String[] parameters) {
+        return new Reader(parameters[1], parameters[2], parameters[3], parameters[4]);
     }
 
     @Override
-    public void execute() {
-        MemoryDAO.getInstance().getReaders().add(create());
+    public void execute(String[] parameters) {
+        if (parameters.length != 5) {
+            LOGGER.info("Wrong number of parameters.");
+            return;
+        }
+        MemoryDAO.getInstance().getReaders().add(create(parameters));
         LOGGER.info("Reader successfully added.");
     }
 
@@ -39,6 +34,6 @@ public class AddReader extends CommandAdd {
 
     @Override
     public String getHelp() {
-        return "to add reader use " + getName();
+        return "to add reader use " + getName() + " name + login + email + password";
     }
 }

@@ -3,6 +3,7 @@ package com.netcracker.edu.commands;
 import com.netcracker.edu.businessobjects.Account;
 import com.netcracker.edu.businessobjects.Book;
 import com.netcracker.edu.businessobjects.Reader;
+import com.netcracker.edu.dao.FileDAO;
 import com.netcracker.edu.dao.MemoryDAO;
 import com.netcracker.edu.util.Input;
 import org.apache.log4j.Logger;
@@ -16,21 +17,22 @@ public class AddAccount extends CommandAdd {
     public static final Logger LOGGER = Logger.getLogger(AddAccount.class);
 
     @Override
-    public Account create() {
-        LOGGER.info("Choose reader:");
-        Reader reader = (Reader) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getReaders());
-        LOGGER.info("Choose book:");
-        Book book = (Book) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getBooks());
-        LOGGER.info("Enter issue date:");
-        Calendar issueDate = Input.readDate();
-        LOGGER.info("Enter return date:");
-        Calendar returnDate = Input.readDate();
+    public Account create(String[] parameters) throws NumberFormatException {
+        Reader reader = (Reader) FileDAO.getInstance().choose(MemoryDAO.getInstance().getReaders(), Integer.parseInt(parameters[1]));
+        Book book = (Book) FileDAO.getInstance().choose(MemoryDAO.getInstance().getBooks(), Integer.parseInt(parameters[2]));
+        Calendar issueDate = Input.readDate(Integer.parseInt(parameters[3]), Integer.parseInt(parameters[4]), Integer.parseInt(parameters[5]));
+        Calendar returnDate = Input.readDate(Integer.parseInt(parameters[6]), Integer.parseInt(parameters[7]), Integer.parseInt(parameters[8]));
         return new Account(reader, book, issueDate, returnDate);
     }
 
     @Override
-    public void execute() {
-        MemoryDAO.getInstance().getAccounts().add(create());
+    public void execute(String[] parameters) {
+        if (parameters.length != 9) {
+            LOGGER.info("Error: wrong number of parameters");
+            LOGGER.info("Account was not added.");
+            return;
+        }
+        FileDAO.getInstance().getAccounts().add(create(parameters));
         LOGGER.info("Account was successfully added");
     }
 
@@ -41,6 +43,6 @@ public class AddAccount extends CommandAdd {
 
     @Override
     public String getHelp() {
-        return "to add account use" + getName();
+        return "to add account input" + getName() + "reader_id book_id issueDate(day_month_year) returnDate(day_month_year)";
     }
 }

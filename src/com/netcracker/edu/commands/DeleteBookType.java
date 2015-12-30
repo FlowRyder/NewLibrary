@@ -1,6 +1,7 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.BookType;
+import com.netcracker.edu.dao.FileDAO;
 import com.netcracker.edu.dao.MemoryDAO;
 import org.apache.log4j.Logger;
 
@@ -11,18 +12,16 @@ import java.io.InputStreamReader;
 /**
  * Created by FlowRyder on 17.11.2015.
  */
-public class DeleteBookType extends CommandDelete {
+public class DeleteBookType extends Command {
     public static final Logger LOGGER = Logger.getLogger(DeleteBookType.class);
 
     @Override
-    public BookType choose() {
-        LOGGER.info("Choose book type:");
-        return (BookType) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getBookTypes());
-    }
-
-    @Override
-    public void execute() {
-        MemoryDAO.getInstance().getBookTypes().remove(choose());
+    public void execute(String[] parameters) {
+        if(parameters.length != 2) {
+            LOGGER.info("Wrong number of parameters.");
+            return;
+        }
+        FileDAO.getInstance().getBookTypes().remove(FileDAO.getInstance().choose(FileDAO.getInstance().getBookTypes(),Integer.parseInt(parameters[1])));
         LOGGER.info("Book type successfully deleted.");
     }
 
@@ -33,6 +32,6 @@ public class DeleteBookType extends CommandDelete {
 
     @Override
     public String getHelp() {
-        return "to delete book type use " + getName();
+        return "to delete book type use " + getName() + " booktype_id";
     }
 }

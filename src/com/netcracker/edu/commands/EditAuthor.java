@@ -1,6 +1,7 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Author;
+import com.netcracker.edu.dao.FileDAO;
 import com.netcracker.edu.dao.MemoryDAO;
 import org.apache.log4j.Logger;
 
@@ -16,19 +17,20 @@ public class EditAuthor extends CommandEdit {
     public static final Logger LOGGER = Logger.getLogger(EditAuthor.class);
 
     @Override
-    public Author edit() {
-        LOGGER.info("Choose author:");
-        Author author = (Author) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getAuthors());
-        MemoryDAO.getInstance().getAuthors().remove(author);
-        Scanner scanner = new Scanner(System.in);
-        LOGGER.info("Enter name:");
-        author.setName(scanner.nextLine());
+    public Author edit(String[] parameters) {
+        Author author = (Author) FileDAO.getInstance().choose(FileDAO.getInstance().getAuthors(), Integer.parseInt(parameters[1]));
+        FileDAO.getInstance().getAuthors().remove(author);
+        author.setName(parameters[2]);
         return author;
     }
 
     @Override
-    public void execute() throws IOException {
-        MemoryDAO.getInstance().getAuthors().add(edit());
+    public void execute(String[] parameters) throws IOException {
+        if (parameters.length != 3) {
+            LOGGER.info("Wrong number of parameters");
+            return;
+        }
+        FileDAO.getInstance().getAuthors().add(edit(parameters));
         LOGGER.info("Author successfully edited.");
     }
 
@@ -39,6 +41,6 @@ public class EditAuthor extends CommandEdit {
 
     @Override
     public String getHelp() {
-        return "to edit author use " + getName();
+        return "to edit author use " + getName() + " author_id + author_name";
     }
 }

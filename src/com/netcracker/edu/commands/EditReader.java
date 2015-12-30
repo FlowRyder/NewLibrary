@@ -1,6 +1,7 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Reader;
+import com.netcracker.edu.dao.FileDAO;
 import com.netcracker.edu.dao.MemoryDAO;
 import org.apache.log4j.Logger;
 
@@ -16,25 +17,23 @@ public class EditReader extends CommandEdit {
     public static final Logger LOGGER = Logger.getLogger(EditGenre.class);
 
     @Override
-    public Reader edit() {
-        LOGGER.info("Choose reader:");
-        Reader reader = (Reader) MemoryDAO.getInstance().choose(MemoryDAO.getInstance().getReaders());
-        MemoryDAO.getInstance().getReaders().remove(reader);
-        Scanner scanner = new Scanner(System.in);
-        LOGGER.info("Enter name:");
-        reader.setName(scanner.nextLine());
-        LOGGER.info("Enter email:");
-        reader.setEmail(scanner.nextLine());
-        LOGGER.info("Enter login:");
-        reader.setLogin(scanner.nextLine());
-        LOGGER.info("Enter password:");
-        reader.setPassword(scanner.nextLine());
+    public Reader edit(String[] parameters) {
+        Reader reader = (Reader) FileDAO.getInstance().choose(FileDAO.getInstance().getReaders(), Integer.parseInt(parameters[1]));
+        FileDAO.getInstance().getReaders().remove(reader);
+        reader.setName(parameters[2]);
+        reader.setEmail(parameters[3]);
+        reader.setLogin(parameters[4]);
+        reader.setPassword(parameters[5]);
         return reader;
     }
 
     @Override
-    public void execute() {
-        MemoryDAO.getInstance().getReaders().add(edit());
+    public void execute(String[] parameters) {
+        if (parameters.length != 6) {
+            LOGGER.info("Wrong number of parameters.");
+            return;
+        }
+        FileDAO.getInstance().getReaders().add(edit(parameters));
         LOGGER.info("Reader successfully edited.");
     }
 
@@ -45,6 +44,6 @@ public class EditReader extends CommandEdit {
 
     @Override
     public String getHelp() {
-        return "to edit reader use " + getName();
+        return "to edit reader use " + getName() + " reader_id + name + email + login + password";
     }
 }
