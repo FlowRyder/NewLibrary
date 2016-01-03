@@ -32,8 +32,9 @@ public class AddGenre extends CommandAdd {
         }
         Genre genre = create(parameters);
         if (genre != null) {
-            MemoryDAO.getInstance().getGenres().add(genre);
+            FileDAO.getInstance().getGenres().add(genre);
             LOGGER.info("Genre successfully added");
+            LOGGER.info(genre.toString());
         } else {
             LOGGER.info("Error: genre already exists.");
         }

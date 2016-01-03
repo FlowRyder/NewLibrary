@@ -31,6 +31,7 @@ public final class CommandEngine {
         commandMap.put("edit_genre", new EditGenre());
         commandMap.put("edit_reader", new EditReader());
         commandMap.put("help", new HelpCommand());
+        commandMap.put("exit", new ExitCommand());
     }
 
     public static CommandEngine getInstance() {

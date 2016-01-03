@@ -5,9 +5,7 @@ import com.netcracker.edu.util.Load;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Scanner;
 
 /**
  * Created by FlowRyder on 29.12.2015.
@@ -24,13 +22,13 @@ public class FileDAO {
     private Collection<Librarian> librarians;
 
     private FileDAO() {
-        genres = (Collection<Genre>) Load.loadCollection("genre");
-        authors = (Collection<Author>) Load.loadCollection("author");
-        bookTypes = (Collection<BookType>) Load.loadCollection("booktype");
-        readers = (Collection<Reader>) Load.loadCollection("reader");
-        books = (Collection<Book>) Load.loadCollection("book");
-        accounts = (Collection<Account>) Load.loadCollection("account");
-        librarians = (Collection<Librarian>) Load.loadCollection("librarian");
+        genres = Load.loadGenres();
+        authors =  Load.loadAuthors();
+        bookTypes = Load.loadBookTypes();
+        readers = Load.loadReader();
+        books = Load.loadBooks();
+        accounts = Load.loadAccounts();
+        librarians = Load.loadLibrarians();
     }
 
     public IDObject choose(Collection<? extends IDObject> collection, int id) {
@@ -40,6 +38,22 @@ public class FileDAO {
             }
         }
         return null;
+    }
+
+    public void show() {
+        LOGGER.info("Genre");
+        for(Genre genre : FileDAO.getInstance().getGenres()) {
+            LOGGER.info(genre.toString());
+        }
+        LOGGER.info("Author");
+        for(Author author : FileDAO.getInstance().getAuthors()) {
+            LOGGER.info(author.toString());
+        }
+        LOGGER.info("BookType");
+        for(BookType bookType : FileDAO.getInstance().getBookTypes()) {
+            LOGGER.info(bookType.toString());
+        }
+
     }
 
     public static FileDAO getInstance() {

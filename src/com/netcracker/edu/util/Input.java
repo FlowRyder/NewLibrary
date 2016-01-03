@@ -14,4 +14,16 @@ public class Input {
         calendar.set(Calendar.YEAR, year);
         return calendar;
     }
+
+    public static String writeCalendar(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.MONTH) + " " + calendar.get(Calendar.YEAR);
+    }
+
+    public static Calendar loadCalendar(String[] parameters) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[0]));
+        calendar.set(Calendar.MONTH, Integer.parseInt(parameters[1]));
+        calendar.set(Calendar.YEAR, Integer.parseInt(parameters[2]));
+        return calendar;
+    }
 }

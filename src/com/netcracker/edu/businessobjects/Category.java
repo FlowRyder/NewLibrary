@@ -18,4 +18,9 @@ public class Category extends NamedObject {
         return bookList;
     }
 
+    @Override
+    public String write() {
+        return this.getName() + " " + this.getId();
+    }
+
 }

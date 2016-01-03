@@ -26,4 +26,19 @@ public class Book extends IDObject {
     public String toString() {
         return bookType.getName() + " [" + getId() + "]";
     }
+
+    @Override
+    public String write() {
+        return this.getBookType().write() + " " + this.getId();
+    }
+
+    public static Book load(String[] parameters) {
+        String[] bookTypeParameters = new String[6];
+        System.arraycopy(parameters, 0, bookTypeParameters, 0, 6);
+        BookType bookType = null;
+        bookType = bookType.load(bookTypeParameters);
+        Book book = new Book(bookType);
+        book.setId(Integer.parseInt(parameters[6]));
+        return book;
+    }
 }

@@ -32,6 +32,9 @@ public class EditGenre extends CommandEdit {
         }
         FileDAO.getInstance().getGenres().add(edit(parameters));
         LOGGER.info("Genre successfully edited.");
+        for(Genre genre : FileDAO.getInstance().getGenres()) {
+            LOGGER.info(genre.toString());
+        }
     }
 
     @Override

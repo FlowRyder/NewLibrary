@@ -19,6 +19,7 @@ public class User extends NamedObject {
         setEmail(email);
         setPassword(password);
     }
+
     public String getLogin() {
         return login;
     }
@@ -63,4 +64,10 @@ public class User extends NamedObject {
             this.password = password;
         }
     }
+
+    @Override
+    public String write() {
+        return this.getName() + " " + this.getLogin() + " " + this.getEmail() + " " + this.getPassword() + " " + this.getId();
+    }
+
 }

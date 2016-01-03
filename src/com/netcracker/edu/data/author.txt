@@ -1,0 +1,6 @@
+test_author 55
+Pelevin 6
+Sorokin 7
+Chehov 8
+Dostoevsky 9
+Kafka 10

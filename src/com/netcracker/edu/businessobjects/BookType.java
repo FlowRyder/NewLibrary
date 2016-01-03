@@ -2,6 +2,8 @@ package com.netcracker.edu.businessobjects;
 
 import com.netcracker.edu.util.Check;
 
+import java.util.Arrays;
+
 /**
  * Created by FlowRyder on 13.11.2015.
  */
@@ -33,5 +35,22 @@ public class BookType extends NamedObject {
         this.author = author;
     }
 
+    @Override
+    public String write() {
+        return this.getName() + " " + this.getGenre().write() + " " + this.getAuthor().write() + " " + this.getId();
+    }
 
+    public static BookType load(String[] parameters) {
+        String[] genreParameters = new String[2];
+        System.arraycopy(parameters, 1, genreParameters, 0, 2);
+        Genre genre = null;
+        genre = (Genre) genre.load(genreParameters);
+        String[] authorParameters = new String[2];
+        System.arraycopy(parameters, 3, authorParameters, 0, 2);
+        Author author = null;
+        author = (Author) author.load(authorParameters);
+        BookType bookType = new BookType(parameters[0], genre, author);
+        bookType.setId(Integer.parseInt(parameters[5]));
+        return bookType;
+    }
 }
