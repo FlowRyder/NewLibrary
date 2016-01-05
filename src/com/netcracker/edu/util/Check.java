@@ -1,10 +1,9 @@
 package com.netcracker.edu.util;
 
-import com.netcracker.edu.businessobjects.Author;
-import com.netcracker.edu.businessobjects.BookType;
-import com.netcracker.edu.businessobjects.Genre;
-import com.netcracker.edu.businessobjects.NamedObject;
+import com.netcracker.edu.businessobjects.*;
 import com.netcracker.edu.dao.MemoryDAO;
+import com.netcracker.edu.session.Context;
+import org.apache.log4j.Logger;
 
 import java.util.Iterator;
 
@@ -12,6 +11,8 @@ import java.util.Iterator;
  * Created by FlowRyder on 13.11.2015.
  */
 public class Check {
+    public static final Logger LOGGER = Logger.getLogger(Check.class);
+
     public static void isNullOrVoid(String value) {
         if (value == null || "".equals(value)) {
             throw new IllegalArgumentException("Value is null or void.");
@@ -22,6 +23,21 @@ public class Check {
         if (object == null) {
             throw new IllegalArgumentException("Value is null.");
         }
+    }
+
+    public static boolean access() {
+        if (Context.getLoggedHolder() == null) {
+            LOGGER.info("Error: User doesn't logged in. ");
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isReader() {
+        if (Context.getLoggedHolder() instanceof Reader) {
+            return true;
+        }
+        return false;
     }
 
     public static boolean containBookType(Genre genre, Author author, String name) {

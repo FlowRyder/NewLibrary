@@ -1,6 +1,8 @@
 package com.netcracker.edu.commands;
 
+import com.netcracker.edu.connection.Server;
 import com.netcracker.edu.dao.FileDAO;
+import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -37,6 +39,7 @@ public class ExecuteConsoleCommand {
         while (true) {
             Scanner scanner = new Scanner(System.in);
             FileDAO.getInstance().show();
+            LOGGER.info(Context.getLoggedHolder().toString());
             LOGGER.info("Enter command:");
             String value = scanner.nextLine();
             String[] parameters = value.split(" ");
@@ -60,19 +63,6 @@ public class ExecuteConsoleCommand {
     }
 
     public static void server() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(4444);
-        Socket socket = serverSocket.accept();
-        try (PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-            String inputSource;
-            while ((inputSource = input.readLine()) != null) {
-                try {
-                    String[] parameters = inputSource.split(" ");
-                    CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
-                } catch (Exception e) {
-                    LOGGER.info(e.getMessage());
-                }
-            }
-        }
+        Server.execute();
     }
 }

@@ -12,7 +12,7 @@ public class LogOutCommand extends Command {
     public static final Logger LOGGER = Logger.getLogger(LogOutCommand.class);
     @Override
     public void execute(String[] parameters) throws IOException {
-
+        Context.removeUserFromSignedUsers();
     }
 
     @Override

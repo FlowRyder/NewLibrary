@@ -22,13 +22,14 @@ public class LogInCommand extends Command {
         }
         for(Reader reader : FileDAO.getInstance().getReaders()) {
             if(parameters[1].equals(reader.getLogin()) && parameters[2].equals(reader.getPassword())) {
-                Context.addReader(reader);
+                Context.setLoggedUser(reader);
                 return;
             }
         }
         for(Librarian librarian : FileDAO.getInstance().getLibrarians()) {
             if(parameters[1].equals(librarian.getLogin()) && parameters[2].equals(librarian.getPassword())) {
-                Context.addLibrarian(librarian);
+                Context.setLoggedUser(librarian);
+                LOGGER.info(librarian.toString() + " logged in.");
                 return;
             }
         }

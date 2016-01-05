@@ -20,6 +20,7 @@ public class ExitCommand extends Command {
         Save.saveCollection("genre");
         Save.saveCollection("reader");
         Save.saveCollection("librarian");
+        System.exit(0);
     }
 
     @Override

@@ -32,6 +32,8 @@ public final class CommandEngine {
         commandMap.put("edit_reader", new EditReader());
         commandMap.put("help", new HelpCommand());
         commandMap.put("exit", new ExitCommand());
+        commandMap.put("log_in", new LogInCommand());
+        commandMap.put("log_out", new LogOutCommand());
     }
 
     public static CommandEngine getInstance() {

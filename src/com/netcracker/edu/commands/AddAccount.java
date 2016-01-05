@@ -5,6 +5,7 @@ import com.netcracker.edu.businessobjects.Book;
 import com.netcracker.edu.businessobjects.Reader;
 import com.netcracker.edu.dao.FileDAO;
 import com.netcracker.edu.dao.MemoryDAO;
+import com.netcracker.edu.util.Check;
 import com.netcracker.edu.util.Input;
 import org.apache.log4j.Logger;
 
@@ -27,6 +28,9 @@ public class AddAccount extends CommandAdd {
 
     @Override
     public void execute(String[] parameters) {
+        if(Check.access()) {
+            return;
+        }
         if (parameters.length != 9) {
             LOGGER.info("Error: wrong number of parameters");
             LOGGER.info("Account was not added.");

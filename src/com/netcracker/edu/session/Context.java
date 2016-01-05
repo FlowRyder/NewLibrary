@@ -2,61 +2,36 @@ package com.netcracker.edu.session;
 
 import com.netcracker.edu.businessobjects.Librarian;
 import com.netcracker.edu.businessobjects.Reader;
+import com.netcracker.edu.businessobjects.User;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by FlowRyder on 02.01.2016.
  */
 public class Context {
     public static final Logger LOGGER = Logger.getLogger(Context.class);
-    private static Context INSTANCE = new Context();
-    private static Collection<Reader> activeReaders;
-    private static Collection<Librarian> activeLibrarians;
+    private static final ThreadLocal<User> threadLocalScope = new ThreadLocal<>();
+    private static final Set<User> activeUsers = new HashSet<>();
 
-    public static Context getInstance() {
-        return INSTANCE;
+    public final static User getLoggedHolder() {
+        return threadLocalScope.get();
     }
 
-    private Context() {
-        activeReaders = new HashSet<>();
-        activeLibrarians = new HashSet<>();
-    }
-
-    public static void addReader(Reader reader) {
-        if (!containReader(reader)) {
-            activeReaders.add(reader);
-        } else {
-            LOGGER.info("Error: reader already logged in.");
+    public synchronized static void setLoggedUser(User user) throws IOException {
+        if (activeUsers.contains(user)) {
+            throw new AccessDeniedException("User already signed in");
         }
+        activeUsers.add(user);
+        threadLocalScope.set(user);
     }
 
-    public static void addLibrarian(Librarian librarian) {
-        if (!containLibrarian(librarian)) {
-            activeLibrarians.add(librarian);
-        } else {
-            LOGGER.info("Error: librarian already logged in.");
-        }
-
-    }
-
-    public static boolean containReader(Reader reader) {
-        for (Reader activeReader : activeReaders) {
-            if (reader.equals(activeReader)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean containLibrarian(Librarian librarian) {
-        for (Librarian activeLibrarian : activeLibrarians) {
-            if (librarian.equals(activeLibrarian)) {
-                return true;
-            }
-        }
-        return false;
+    public synchronized final static void removeUserFromSignedUsers() {
+        activeUsers.remove(threadLocalScope.get());
     }
 }
