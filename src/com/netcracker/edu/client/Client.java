@@ -60,10 +60,6 @@ public class Client {
             char[] buffer = new char[(int) file.length()];
             fileReader.read(buffer);
             commands = new String(buffer).split("\\r?\\n");
-            for (String string : commands) {
-                String[] parameters = string.split(" ");
-                CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
-            }
         } catch (IOException e) {
             LOGGER.info(e.getMessage());
         }
