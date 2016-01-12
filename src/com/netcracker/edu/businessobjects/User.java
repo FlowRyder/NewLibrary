@@ -1,19 +1,16 @@
 package com.netcracker.edu.businessobjects;
 
-import com.netcracker.edu.util.Check;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Arrays;
 
 /**
- * Created by FlowRyder on 13.11.2015.
+ * Created by FlowRyder.
  */
 public class User extends NamedObject {
     private String login;
     private String email;
-    private String password;
+    private char[] password;
 
-    public User(String name, String login, String email, String password) {
+    public User(String name, String login, String email, char[] password) {
         super(name);
         setLogin(login);
         setEmail(email);
@@ -25,14 +22,10 @@ public class User extends NamedObject {
     }
 
     public void setLogin(String login) {
-        Check.isNullOrVoid(login);
-        Pattern pattern = Pattern.compile("^(?=.{3,24})[a-z][a-z0-9]*[._-]?[a-z0-9]+$");
-        Matcher matcher = pattern.matcher(login);
-        if (!(matcher.matches())) {
-            throw new IllegalArgumentException("Invalid format of login.");
-        } else {
-            this.login = login;
+        if (login == null || login.isEmpty()) {
+            throw new IllegalArgumentException("Error: login shouldn't be null or empty.");
         }
+        this.login = login;
     }
 
     public String getEmail() {
@@ -40,34 +33,43 @@ public class User extends NamedObject {
     }
 
     public void setEmail(String email) {
-        Check.isNullOrVoid(email);
-        Pattern pattern = Pattern.compile("^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$");
-        Matcher matcher = pattern.matcher(email);
-        if (!(matcher.matches())) {
-            throw new IllegalArgumentException("Invalid format of email address.");
-        } else {
-            this.email = email;
+        if (email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("Error: email shouldn't be null or empty.");
         }
+        this.email = email;
     }
 
-    public String getPassword() {
+    public char[] getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        Check.isNullOrVoid(password);
-        Pattern pattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$");
-        Matcher matcher = pattern.matcher(password);
-        if (!(matcher.matches())) {
-            throw new IllegalArgumentException("Invalid format of password.");
-        } else {
-            this.password = password;
+    public void setPassword(char[] password) {
+        if (password == null || password.length == 0) {
+            throw new IllegalArgumentException("Error: password shouldn't be null or empty.");
         }
+        this.password = password;
     }
 
     @Override
-    public String write() {
-        return this.getName() + " " + this.getLogin() + " " + this.getEmail() + " " + this.getPassword() + " " + this.getId();
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        User that = (User) o;
+        return login.equals(that.getLogin()) && email.equals(that.getEmail()) && Arrays.equals(password, that.getPassword());
     }
 
+    @Override
+    public int hashCode() {
+        return login.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getName() + " " + getLogin() + " " + getEmail() + " [" + getId() + "]";
+    }
 }

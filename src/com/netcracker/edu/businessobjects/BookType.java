@@ -1,56 +1,59 @@
 package com.netcracker.edu.businessobjects;
 
-import com.netcracker.edu.util.Check;
-
-import java.util.Arrays;
+import java.math.BigInteger;
 
 /**
- * Created by FlowRyder on 13.11.2015.
+ * Created by FlowRyder.
  */
 public class BookType extends NamedObject {
-    private Genre genre;
-    private Author author;
+    private BigInteger genreID;
+    private BigInteger authorID;
 
-    public BookType(String name, Genre genre, Author author) {
+    public BookType(String name, BigInteger genreID, BigInteger authorID) {
         super(name);
-        setGenre(genre);
-        setAuthor(author);
+        setGenreID(genreID);
+        setAuthorID(authorID);
     }
 
-    public Genre getGenre() {
-        return genre;
+    public BigInteger getGenreID() {
+        return genreID;
     }
 
-    public void setGenre(Genre genre) {
-        Check.isNull(genre);
-        this.genre = genre;
+    public void setGenreID(BigInteger genreID) {
+        if (genreID == null || genreID.compareTo(BigInteger.ZERO) < 0) {
+            throw new NullPointerException("Error: genreID shouldn't be null or negative value.");
+        }
+        this.genreID = genreID;
     }
 
-    public Author getAuthor() {
-        return author;
+    public BigInteger getAuthorID() {
+        return authorID;
     }
 
-    public void setAuthor(Author author) {
-        Check.isNull(author);
-        this.author = author;
+    public void setAuthorID(BigInteger authorID) {
+        if (authorID == null || authorID.compareTo(BigInteger.ZERO) < 0) {
+            throw new NullPointerException("Error: authorID shouldn't be null or negative value.");
+        }
+        this.authorID = authorID;
     }
 
     @Override
-    public String write() {
-        return this.getName() + " " + this.getGenre().write() + " " + this.getAuthor().write() + " " + this.getId();
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        BookType that = (BookType) o;
+        return this.getName().equals(that.getName()) && this.getGenreID().equals(that.genreID)
+                && this.getAuthorID().equals(that.authorID);
     }
 
-    public static BookType load(String[] parameters) {
-        String[] genreParameters = new String[2];
-        System.arraycopy(parameters, 1, genreParameters, 0, 2);
-        Genre genre = null;
-        genre = (Genre) genre.load(genreParameters);
-        String[] authorParameters = new String[2];
-        System.arraycopy(parameters, 3, authorParameters, 0, 2);
-        Author author = null;
-        author = (Author) author.load(authorParameters);
-        BookType bookType = new BookType(parameters[0], genre, author);
-        bookType.setId(Integer.parseInt(parameters[5]));
-        return bookType;
+    @Override
+    public String toString() {
+        return getName() + " genre ID[" + getGenreID() + "] authorID[" + getAuthorID() +
+                "] [" + getId() + "]";
     }
 }

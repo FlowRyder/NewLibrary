@@ -1,40 +1,55 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Book;
-import com.netcracker.edu.businessobjects.BookType;
+import com.netcracker.edu.businessobjects.Librarian;
 import com.netcracker.edu.dao.FileDAO;
-import com.netcracker.edu.dao.MemoryDAO;
-import com.netcracker.edu.util.Choice;
+import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.math.BigInteger;
 
 /**
- * Created by FlowRyder on 25.11.2015.
+ * Created by FlowRyder.
  */
-public class EditBook extends CommandEdit {
+public class EditBook extends Command {
     public static final Logger LOGGER = Logger.getLogger(EditBook.class);
+    public int parametersNumber = 3;
+    public Class classAccess = Librarian.class;
 
     @Override
-    public Book edit(String[] parameters) {
-        Book book = (Book) FileDAO.getInstance().choose(FileDAO.getInstance().getBooks(), Integer.parseInt(parameters[1]));
-        FileDAO.getInstance().getBooks().remove(book);
-        book.setBookType((BookType) FileDAO.getInstance().choose(FileDAO.getInstance().getBookTypes(), Integer.parseInt(parameters[2])));
-        return book;
-    }
-
-    @Override
-    public void execute(String[] parameters) throws IOException {
-        if (parameters.length != 3) {
-            LOGGER.info("Wrong number of parameters.");
-            return;
+    public int execute(String[] parameters) {
+        if (Context.getLoggedHolder() == null) {
+            LOGGER.warn("Error: User isn't logged in.");
+            return 1;
         }
-        FileDAO.getInstance().getBooks().add(edit(parameters));
+        if (!Context.getLoggedHolder().getClass().equals(classAccess)) {
+            LOGGER.warn("Error: Access only for librarians.");
+            return 2;
+        }
+        if (parameters.length != parametersNumber) {
+            LOGGER.warn("Error: Wrong number of parameters.");
+            return 3;
+        }
+        Book book;
+        try {
+            book = FileDAO.getInstance().loadBook(new BigInteger(parameters[1]));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error: ID should be number.");
+            return 6;
+        }
+        if (book == null) {
+            LOGGER.warn("Error: Wrong ID.");
+            return 16;
+        }
+        try {
+            book.setBookTypeID(BigInteger.valueOf(Long.getLong(parameters[2])));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error: ID should be number.");
+            return 6;
+        }
+        FileDAO.getInstance().updateBook(book);
         LOGGER.info("Book successfully edited.");
+        return 0;
     }
 
     @Override
@@ -44,6 +59,7 @@ public class EditBook extends CommandEdit {
 
     @Override
     public String getHelp() {
-        return "to edit book use " + getName() + " book_id + booktype_id";
+        return "to edit book use " + getName() + " book_id  bookType_id" + "\n"
+                + "Example: edit_book 30 79";
     }
 }

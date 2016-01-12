@@ -1,40 +1,77 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Account;
-import com.netcracker.edu.businessobjects.Book;
-import com.netcracker.edu.businessobjects.Reader;
 import com.netcracker.edu.dao.FileDAO;
-import com.netcracker.edu.dao.MemoryDAO;
-import com.netcracker.edu.util.Input;
+import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.Calendar;
 
 /**
- * Created by FlowRyder on 29.11.2015.
+ * Created by FlowRyder
  */
-public class EditAccount extends CommandEdit {
+public class EditAccount extends Command {
     public static final Logger LOGGER = Logger.getLogger(EditAccount.class);
+    public int parametersNumber = 10;
 
     @Override
-    public Account edit(String[] parameters) {
-        Account account = (Account) FileDAO.getInstance().choose(FileDAO.getInstance().getAccounts(), Integer.parseInt(parameters[1]));
-        FileDAO.getInstance().getAccounts().remove(account);
-        account.setIssueDate(Input.readDate(Integer.parseInt(parameters[4]), Integer.parseInt(parameters[5]), Integer.parseInt(parameters[6])));
-        account.setReturnDate(Input.readDate(Integer.parseInt(parameters[7]), Integer.parseInt(parameters[8]), Integer.parseInt(parameters[9])));
-        account.setBook((Book) FileDAO.getInstance().choose(FileDAO.getInstance().getBooks(), Integer.parseInt(parameters[3])));
-        account.setReader((Reader) FileDAO.getInstance().choose(FileDAO.getInstance().getReaders(), Integer.parseInt(parameters[2])));
-        return account;
-    }
-
-    @Override
-    public void execute(String[] parameters) throws IOException {
-        if (parameters.length != 10) {
-            LOGGER.info("Wrong number of parameters.");
-            return;
+    public int execute(String[] parameters) throws IOException {
+        if (Context.getLoggedHolder() == null) {
+            LOGGER.warn("Error: User isn't logged in.");
+            return 1;
         }
-        FileDAO.getInstance().getAccounts().add(edit(parameters));
+        if (parameters.length != parametersNumber) {
+            LOGGER.warn("Error: Wrong number of parameters.");
+            return 3;
+        }
+        Account account;
+        try {
+            account = FileDAO.getInstance().loadAccount(BigInteger.valueOf(Long.getLong(parameters[1])));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error: ID should be number.");
+            return 6;
+        }
+        if (account == null) {
+            LOGGER.warn("Error: Wrong ID.");
+            return 16;
+        }
+        try {
+            account.setReaderID(BigInteger.valueOf(Long.getLong(parameters[2])));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error: ID should be number.");
+            return 6;
+        }
+        try {
+            account.setBookID(BigInteger.valueOf(Long.getLong(parameters[3])));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error: ID should be number.");
+            return 6;
+        }
+        Calendar issueDate = Calendar.getInstance();
+        try {
+            issueDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[4]));
+            issueDate.set(Calendar.MONTH, Integer.parseInt(parameters[5]));
+            issueDate.set(Calendar.YEAR, Integer.parseInt(parameters[6]));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error: Date should have number format.");
+            return 17;
+        }
+        account.setIssueDate(issueDate);
+        Calendar returnDate = Calendar.getInstance();
+        try {
+            returnDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[7]));
+            returnDate.set(Calendar.MONTH, Integer.parseInt(parameters[8]));
+            returnDate.set(Calendar.YEAR, Integer.parseInt(parameters[9]));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error: Date should have number format.");
+            return 17;
+        }
+        account.setReturnDate(returnDate);
+        FileDAO.getInstance().updateAccount(account);
         LOGGER.info("Account successfully edited.");
+        return 0;
     }
 
     @Override
@@ -44,6 +81,8 @@ public class EditAccount extends CommandEdit {
 
     @Override
     public String getHelp() {
-        return "to edit account use " + getName() + "account_id reader_id book_id issueDate(day_month_year) returnDate(day_month_year)";
+        return "to edit account use " + getName() + "account_id reader_id book_id " +
+                "issueDate(day month year) returnDate(day month year)" + "\n"
+                + "Example: edit_account 107 34 89 12 12 2017 10 01 2018";
     }
 }

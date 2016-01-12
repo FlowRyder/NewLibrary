@@ -1,39 +1,46 @@
 package com.netcracker.edu.commands;
 
-import com.netcracker.edu.businessobjects.Librarian;
-import com.netcracker.edu.businessobjects.Reader;
+import com.netcracker.edu.businessobjects.User;
 import com.netcracker.edu.dao.FileDAO;
 import com.netcracker.edu.session.Context;
-import com.netcracker.edu.util.Load;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
- * Created by FlowRyder on 03.01.2016.
+ * Created by FlowRyder
  */
 public class LogInCommand extends Command {
-    public static final Logger LOGGER = Logger.getLogger(Load.class);
+    public static final Logger LOGGER = Logger.getLogger(LogInCommand.class);
+    public int parametersNumber = 3;
 
     @Override
-    public void execute(String[] parameters) throws IOException {
-        if(parameters.length != 3) {
-            LOGGER.info("Error: wrong number of parameters.");
+    public int execute(String[] parameters) throws IOException {
+        if (parameters.length != parametersNumber) {
+            LOGGER.warn("Error: Wrong number of parameters.");
+            return 3;
         }
-        for(Reader reader : FileDAO.getInstance().getReaders()) {
-            if(parameters[1].equals(reader.getLogin()) && parameters[2].equals(reader.getPassword())) {
-                Context.setLoggedUser(reader);
-                return;
-            }
+        User user = FileDAO.getInstance().findByLogin(parameters[1]);
+
+        /*WARNING! Different warning message for wrong login/password
+        is unsafe, this is temporary usage for troubleshooting.*/
+
+        if (user == null) {
+            LOGGER.warn("Error: There is no user with such login.");
+            return 12;
         }
-        for(Librarian librarian : FileDAO.getInstance().getLibrarians()) {
-            if(parameters[1].equals(librarian.getLogin()) && parameters[2].equals(librarian.getPassword())) {
-                Context.setLoggedUser(librarian);
-                LOGGER.info(librarian.toString() + " logged in.");
-                return;
-            }
+        if (!Arrays.equals(user.getPassword(), parameters[2].toCharArray())) {
+            LOGGER.warn("Error: Wrong password.");
+            return 13;
         }
-        LOGGER.info("Error: Incorrect login or password");
+        if (Context.getActiveUsers().contains(user)) {
+            LOGGER.warn("Error: User already logged in.");
+            return 11;
+        }
+        Context.setLoggedUser(user);
+        LOGGER.info("User successfully logged in.");
+        return 0;
     }
 
     @Override
@@ -43,6 +50,7 @@ public class LogInCommand extends Command {
 
     @Override
     public String getHelp() {
-        return "to log in use enter" + getName() + " login password";
+        return "to log in use " + getName() + " login password" + "\n"
+                + "Example: petya89 read12book34";
     }
 }

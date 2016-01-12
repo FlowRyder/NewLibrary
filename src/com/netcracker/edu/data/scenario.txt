@@ -1,3 +1,225 @@
-add_genre test_genre
-add_author test_author
-exit
+add_genre detective:1
+log_in somelogin somepassword:12
+log_in angry_tomat otherpassword:13
+register andrey 1111 andrey1234@mail.ru q1w2e3r4 reader:7
+register andrey andrey11 andrey1234ru q1w2e3r4 reader:8
+register andrey andrey11 andrey1234@mail.ru qqq reader:9
+register andrey andrey11 andrey1234@mail.ru q1w2e3r4 fbdgd:10
+log_in polly_starless PoNY5678:0
+add_genre:3
+add_genre :4
+add_genre detective:0
+edit_genre:3
+edit_genre :4
+edit_genre 12 novel:0
+delete_genre:3
+detele_genre 14:16
+delete_genre a:6
+delete_genre 12:0
+add_author:3
+add_author :4
+add_author Pelevin:0
+edit_author:3
+edit_author :4
+edit_author 13 Sorokin:0
+detele_genre 14:16
+delete_genre b:6
+delete_genre 13:0
+add_bookType Metel' 1 4:16
+add_bookType Metel':3
+add_bookType  1 4:4
+add_bookType Metel' a b:6
+add_bookType Metel' 2 4:0
+edit_bookType:3
+edit_bookType Generation_Pi 0 3:16
+edit_bookType Generation_Pi fdfd bgfg:6
+edit_bookType Generation_Pi 2 4:0
+log_out:0
+exit:0
+add_account 1 34 12 1 2016 18 1 2016:1
+log_in vermyt777 Audi781:0
+add_genre pulp_fiction:2
+add_account 1 34 aa 1 2016 bb 1 2016:17
+add_account 1 34 11 1 2016 18 1 2016:0
+log_out:0
+exit:0
+add_genre detective:1
+log_in somelogin somepassword:12
+log_in angry_tomat otherpassword:13
+register andrey 1111 andrey1234@mail.ru q1w2e3r4 reader:7
+register andrey andrey11 andrey1234ru q1w2e3r4 reader:8
+register andrey andrey11 andrey1234@mail.ru qqq reader:9
+register andrey andrey11 andrey1234@mail.ru q1w2e3r4 fbdgd:10
+log_in polly_starless PoNY5678:0
+add_genre:3
+add_genre :4
+add_genre detective:0
+edit_genre:3
+edit_genre :4
+edit_genre 12 novel:0
+delete_genre:3
+detele_genre 14:16
+delete_genre a:6
+delete_genre 12:0
+add_author:3
+add_author :4
+add_author Pelevin:0
+edit_author:3
+edit_author :4
+edit_author 13 Sorokin:0
+detele_genre 14:16
+delete_genre b:6
+delete_genre 13:0
+add_bookType Metel' 1 4:16
+add_bookType Metel':3
+add_bookType  1 4:4
+add_bookType Metel' a b:6
+add_bookType Metel' 2 4:0
+edit_bookType:3
+edit_bookType Generation_Pi 0 3:16
+edit_bookType Generation_Pi fdfd bgfg:6
+edit_bookType Generation_Pi 2 4:0
+log_out:0
+exit:0
+add_account 1 34 12 1 2016 18 1 2016:1
+log_in vermyt777 Audi781:0
+add_genre pulp_fiction:2
+add_account 1 34 aa 1 2016 bb 1 2016:17
+add_account 1 34 11 1 2016 18 1 2016:0
+log_out:0
+exit:0
+add_genre detective:1
+log_in somelogin somepassword:12
+log_in angry_tomat otherpassword:13
+register andrey 1111 andrey1234@mail.ru q1w2e3r4 reader:7
+register andrey andrey11 andrey1234ru q1w2e3r4 reader:8
+register andrey andrey11 andrey1234@mail.ru qqq reader:9
+register andrey andrey11 andrey1234@mail.ru q1w2e3r4 fbdgd:10
+log_in polly_starless PoNY5678:0
+add_genre:3
+add_genre :4
+add_genre detective:0
+edit_genre:3
+edit_genre :4
+edit_genre 12 novel:0
+delete_genre:3
+detele_genre 14:16
+delete_genre a:6
+delete_genre 12:0
+add_author:3
+add_author :4
+add_author Pelevin:0
+edit_author:3
+edit_author :4
+edit_author 13 Sorokin:0
+detele_genre 14:16
+delete_genre b:6
+delete_genre 13:0
+add_bookType Metel' 1 4:16
+add_bookType Metel':3
+add_bookType  1 4:4
+add_bookType Metel' a b:6
+add_bookType Metel' 2 4:0
+edit_bookType:3
+edit_bookType Generation_Pi 0 3:16
+edit_bookType Generation_Pi fdfd bgfg:6
+edit_bookType Generation_Pi 2 4:0
+log_out:0
+exit:0
+add_account 1 34 12 1 2016 18 1 2016:1
+log_in vermyt777 Audi781:0
+add_genre pulp_fiction:2
+add_account 1 34 aa 1 2016 bb 1 2016:17
+add_account 1 34 11 1 2016 18 1 2016:0
+log_out:0
+exit:0
+add_genre detective:1
+log_in somelogin somepassword:12
+log_in angry_tomat otherpassword:13
+register andrey 1111 andrey1234@mail.ru q1w2e3r4 reader:7
+register andrey andrey11 andrey1234ru q1w2e3r4 reader:8
+register andrey andrey11 andrey1234@mail.ru qqq reader:9
+register andrey andrey11 andrey1234@mail.ru q1w2e3r4 fbdgd:10
+log_in polly_starless PoNY5678:0
+add_genre:3
+add_genre :4
+add_genre detective:0
+edit_genre:3
+edit_genre :4
+edit_genre 12 novel:0
+delete_genre:3
+detele_genre 14:16
+delete_genre a:6
+delete_genre 12:0
+add_author:3
+add_author :4
+add_author Pelevin:0
+edit_author:3
+edit_author :4
+edit_author 13 Sorokin:0
+detele_genre 14:16
+delete_genre b:6
+delete_genre 13:0
+add_bookType Metel' 1 4:16
+add_bookType Metel':3
+add_bookType  1 4:4
+add_bookType Metel' a b:6
+add_bookType Metel' 2 4:0
+edit_bookType:3
+edit_bookType Generation_Pi 0 3:16
+edit_bookType Generation_Pi fdfd bgfg:6
+edit_bookType Generation_Pi 2 4:0
+log_out:0
+exit:0
+add_account 1 34 12 1 2016 18 1 2016:1
+log_in vermyt777 Audi781:0
+add_genre pulp_fiction:2
+add_account 1 34 aa 1 2016 bb 1 2016:17
+add_account 1 34 11 1 2016 18 1 2016:0
+log_out:0
+exit:0
+add_genre detective:1
+log_in somelogin somepassword:12
+log_in angry_tomat otherpassword:13
+register andrey 1111 andrey1234@mail.ru q1w2e3r4 reader:7
+register andrey andrey11 andrey1234ru q1w2e3r4 reader:8
+register andrey andrey11 andrey1234@mail.ru qqq reader:9
+register andrey andrey11 andrey1234@mail.ru q1w2e3r4 fbdgd:10
+log_in polly_starless PoNY5678:0
+add_genre:3
+add_genre :4
+add_genre detective:0
+edit_genre:3
+edit_genre :4
+edit_genre 12 novel:0
+delete_genre:3
+detele_genre 14:16
+delete_genre a:6
+delete_genre 12:0
+add_author:3
+add_author :4
+add_author Pelevin:0
+edit_author:3
+edit_author :4
+edit_author 13 Sorokin:0
+detele_genre 14:16
+delete_genre b:6
+delete_genre 13:0
+add_bookType Metel' 1 4:16
+add_bookType Metel':3
+add_bookType  1 4:4
+add_bookType Metel' a b:6
+add_bookType Metel' 2 4:0
+edit_bookType:3
+edit_bookType Generation_Pi 0 3:16
+edit_bookType Generation_Pi fdfd bgfg:6
+edit_bookType Generation_Pi 2 4:0
+log_out:0
+exit:0
+add_account 1 34 12 1 2016 18 1 2016:1
+log_in vermyt777 Audi781:0
+add_genre pulp_fiction:2
+add_account 1 34 aa 1 2016 bb 1 2016:17
+add_account 1 34 11 1 2016 18 1 2016:0
+log_out:0
+exit:0

@@ -1,18 +1,21 @@
 package com.netcracker.edu.commands;
 
+import com.netcracker.edu.businessobjects.Genre;
 import com.netcracker.edu.connection.Server;
 import com.netcracker.edu.dao.FileDAO;
-import com.netcracker.edu.session.Context;
+import com.netcracker.edu.persist.FileStorage;
 import org.apache.log4j.Logger;
 
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Scanner;
 
 
 /**
- * Created by FlowRyder on 29.11.2015.
+ * Created by FlowRyder
  */
 public class ExecuteConsoleCommand {
     public static final Logger LOGGER = Logger.getLogger(ExecuteConsoleCommand.class);
@@ -38,12 +41,14 @@ public class ExecuteConsoleCommand {
     public static void console() throws IOException {
         while (true) {
             Scanner scanner = new Scanner(System.in);
-            FileDAO.getInstance().show();
-            LOGGER.info(Context.getLoggedHolder().toString());
+            //FileDAO.getInstance().show();
             LOGGER.info("Enter command:");
             String value = scanner.nextLine();
             String[] parameters = value.split(" ");
             CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
+            if (parameters[0].equals("exit")) {
+                System.exit(0);
+            }
         }
     }
 
@@ -54,11 +59,18 @@ public class ExecuteConsoleCommand {
             fileReader.read(buffer);
             String[] commands = new String(buffer).split("\\r?\\n");
             for (String string : commands) {
-                String[] parameters = string.split(" ");
-                CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
+                String[] parameters = string.split(":");
+                String[] commandParameters = parameters[0].split(" ");
+                int result = Integer.parseInt(parameters[1]);
+                if (result ==
+                        CommandEngine.getInstance().getCommandMap().get(commandParameters[0]).execute(commandParameters)) {
+                    LOGGER.info("Command successful done.");
+                } else {
+                    LOGGER.info("Command end with different code.");
+                }
             }
         } catch (IOException e) {
-            LOGGER.info(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 

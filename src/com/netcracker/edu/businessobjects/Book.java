@@ -1,44 +1,30 @@
 package com.netcracker.edu.businessobjects;
 
-import com.netcracker.edu.util.Check;
+import java.math.BigInteger;
 
 /**
- * Created by FlowRyder on 13.11.2015.
+ * Created by FlowRyder.
  */
 public class Book extends IDObject {
-    private BookType bookType;
+    private BigInteger bookTypeID;
 
-    public Book(BookType bookType) {
-        setBookType(bookType);
+    public Book(BigInteger bookTypeID) {
+        setBookTypeID(bookTypeID);
     }
 
-
-    public void setBookType(BookType bookType) {
-        Check.isNull(bookType);
-        this.bookType = bookType;
+    public BigInteger getBookTypeID() {
+        return bookTypeID;
     }
 
-    public BookType getBookType() {
-        return bookType;
+    public void setBookTypeID(BigInteger bookTypeID) {
+        if (bookTypeID == null || bookTypeID.compareTo(BigInteger.ZERO) < 0) {
+            throw new NullPointerException("Error: bookTypeID shouldn't be null or negative value.");
+        }
+        this.bookTypeID = bookTypeID;
     }
 
     @Override
     public String toString() {
-        return bookType.getName() + " [" + getId() + "]";
-    }
-
-    @Override
-    public String write() {
-        return this.getBookType().write() + " " + this.getId();
-    }
-
-    public static Book load(String[] parameters) {
-        String[] bookTypeParameters = new String[6];
-        System.arraycopy(parameters, 0, bookTypeParameters, 0, 6);
-        BookType bookType = null;
-        bookType = bookType.load(bookTypeParameters);
-        Book book = new Book(bookType);
-        book.setId(Integer.parseInt(parameters[6]));
-        return book;
+        return "bookTypeID[" + getBookTypeID() + "] [" + getId() + "]";
     }
 }

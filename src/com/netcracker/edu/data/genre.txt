@@ -1,8 +1,0 @@
-detective 1
-novel 2
-graphic_novel 3
-grama 4
-test_genre 54
-non_fiction 5
-russian_roman 53
-pulp_function 52

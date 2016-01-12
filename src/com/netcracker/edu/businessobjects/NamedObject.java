@@ -1,9 +1,7 @@
 package com.netcracker.edu.businessobjects;
 
-import com.netcracker.edu.util.Check;
-
 /**
- * Created by FlowRyder on 13.11.2015.
+ * Created by FlowRyder.
  */
 public class NamedObject extends IDObject {
     private String name;
@@ -17,8 +15,28 @@ public class NamedObject extends IDObject {
     }
 
     public void setName(String name) {
-        Check.isNullOrVoid(name);
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Error: Name shouldn't be null or void.");
+        }
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        NamedObject that = (NamedObject) o;
+        return this.name.equals(that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
     @Override

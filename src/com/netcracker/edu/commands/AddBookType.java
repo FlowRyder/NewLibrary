@@ -1,42 +1,48 @@
 package com.netcracker.edu.commands;
 
-import com.netcracker.edu.businessobjects.Author;
-import com.netcracker.edu.businessobjects.BookType;
-import com.netcracker.edu.businessobjects.Genre;
-import com.netcracker.edu.businessobjects.IDObject;
+import com.netcracker.edu.businessobjects.*;
 import com.netcracker.edu.dao.FileDAO;
-import com.netcracker.edu.dao.MemoryDAO;
-import com.netcracker.edu.util.Check;
-import com.netcracker.edu.util.Choice;
+import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.math.BigInteger;
 
 /**
- * Created by FlowRyder on 17.11.2015.
+ * Created by FlowRyder
  */
-public class AddBookType extends CommandAdd {
+public class AddBookType extends Command {
     public static final Logger LOGGER = Logger.getLogger(AddBookType.class);
+    public int parametersNumber = 4;
+    public Class classAccess = Librarian.class;
 
     @Override
-    public BookType create(String[] parameters) {
-        Genre genre = (Genre) FileDAO.getInstance().choose(FileDAO.getInstance().getGenres(), Integer.parseInt(parameters[2]));
-        Author author = (Author) FileDAO.getInstance().choose(FileDAO.getInstance().getAuthors(), Integer.parseInt(parameters[3]));
-        return new BookType(parameters[1], genre, author);
-    }
-
-    @Override
-    public void execute(String[] parameters) {
-        if (parameters.length != 4) {
-            LOGGER.info("Wrong number of parameters.");
-            return;
+    public int execute(String[] parameters) {
+        if (Context.getLoggedHolder() == null) {
+            LOGGER.warn("Error: User isn't logged in.");
+            return 1;
         }
-        MemoryDAO.getInstance().getBookTypes().add(create(parameters));
+        if (!Context.getLoggedHolder().getClass().equals(classAccess)) {
+            LOGGER.warn("Error: Access only for librarians.");
+            return 2;
+        }
+        if (parameters.length != parametersNumber) {
+            LOGGER.warn("Error: Wrong number of parameters.");
+            return 3;
+        }
+        BookType bookType;
+        try {
+            bookType = new BookType(parameters[1], new BigInteger(parameters[2]),
+                    new BigInteger(parameters[3]));
+        } catch (IllegalArgumentException e) {
+            LOGGER.warn("Error: Name shouldn't be null or void.");
+            return 4;
+        } catch (NullPointerException e) {
+            LOGGER.warn("Error: ID shouldn't be null or negative value.");
+            return 5;
+        }
+        FileDAO.getInstance().addBookType(bookType);
         LOGGER.info("Book type successfully added.");
+        return 0;
     }
 
     @Override
@@ -46,6 +52,7 @@ public class AddBookType extends CommandAdd {
 
     @Override
     public String getHelp() {
-        return "to add book type use " + getName() + " booktype_name + genre_id + author_id";
+        return "to add book type use " + getName() + " bookType_name  genre_id  author_id" + "\n"
+                + "Example: Generation_Pi 8 34";
     }
 }

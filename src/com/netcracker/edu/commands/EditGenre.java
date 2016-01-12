@@ -1,40 +1,55 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Genre;
+import com.netcracker.edu.businessobjects.Librarian;
 import com.netcracker.edu.dao.FileDAO;
-import com.netcracker.edu.dao.MemoryDAO;
+import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.math.BigInteger;
 
 /**
- * Created by FlowRyder on 25.11.2015.
+ * Created by FlowRyder
  */
-public class EditGenre extends CommandEdit {
+public class EditGenre extends Command {
     public static final Logger LOGGER = Logger.getLogger(EditGenre.class);
+    public int parametersNumber = 3;
+    public Class classAccess = Librarian.class;
 
     @Override
-    public Genre edit(String[] parameters) {
-        Genre genre = (Genre) FileDAO.getInstance().choose(FileDAO.getInstance().getGenres(), Integer.parseInt(parameters[1]));
-        FileDAO.getInstance().getGenres().remove(genre);
-        genre.setName(parameters[2]);
-        return genre;
-    }
-
-    @Override
-    public void execute(String[] parameters) {
-        if (parameters.length != 3) {
-            LOGGER.info("Wrong number of parameters.");
-            return;
+    public int execute(String[] parameters) {
+        if (Context.getLoggedHolder() == null) {
+            LOGGER.warn("Error: User isn't logged in.");
+            return 1;
         }
-        FileDAO.getInstance().getGenres().add(edit(parameters));
+        if (!Context.getLoggedHolder().getClass().equals(classAccess)) {
+            LOGGER.warn("Error: Access only for librarians.");
+            return 2;
+        }
+        if (parameters.length != parametersNumber) {
+            LOGGER.warn("Error: Wrong number of parameters.");
+            return 3;
+        }
+        Genre genre;
+        try {
+            genre = FileDAO.getInstance().loadGenre(new BigInteger(parameters[1]));
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error: ID should be number.");
+            return 6;
+        }
+        if (genre == null) {
+            LOGGER.warn("Error: Wrong ID.");
+            return 16;
+        }
+        try {
+            genre.setName(parameters[2]);
+        } catch (IllegalArgumentException e) {
+            LOGGER.warn("Error: Name shouldn't be null or void.");
+            return 4;
+        }
+        FileDAO.getInstance().updateGenre(genre);
         LOGGER.info("Genre successfully edited.");
-        for(Genre genre : FileDAO.getInstance().getGenres()) {
-            LOGGER.info(genre.toString());
-        }
+        return 0;
     }
 
     @Override
@@ -44,6 +59,7 @@ public class EditGenre extends CommandEdit {
 
     @Override
     public String getHelp() {
-        return "to edit genre use " + getName() + " genre_id + genre_name";
+        return "to edit genre use " + getName() + " genre_id  genre_name" + "\n"
+                + "Example: edit_genre 17 novel";
     }
 }

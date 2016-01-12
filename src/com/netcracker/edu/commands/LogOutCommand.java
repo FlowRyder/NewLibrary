@@ -6,13 +6,20 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 
 /**
- * Created by FlowRyder on 03.01.2016.
+ * Created by FlowRyder
  */
 public class LogOutCommand extends Command {
     public static final Logger LOGGER = Logger.getLogger(LogOutCommand.class);
+
     @Override
-    public void execute(String[] parameters) throws IOException {
+    public int execute(String[] parameters) throws IOException {
+        if (Context.getLoggedHolder() == null) {
+            LOGGER.warn("Error: User isn't logged in.");
+            return 14;
+        }
         Context.removeUserFromSignedUsers();
+        LOGGER.info("User successfully logged out.");
+        return 0;
     }
 
     @Override

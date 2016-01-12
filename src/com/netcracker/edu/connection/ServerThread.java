@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
- * Created by FlowRyder on 05.01.2016.
+ * Created by FlowRyder
  */
 public class ServerThread implements Runnable {
     public static final Logger LOGGER = Logger.getLogger(Server.class);
@@ -29,15 +29,15 @@ public class ServerThread implements Runnable {
             while ((inputSource = input.readLine()) != null) {
                 try {
                     String[] parameters = inputSource.split(" ");
-                    CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
-                    output.println("Well Done!");
+                    int result = CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
+                    output.println(result);
                 } catch (Exception e) {
-                    LOGGER.info(e.getMessage());
+                    LOGGER.error(e.getMessage());
                 }
             }
             socket.close();
         } catch (IOException e) {
-            LOGGER.info(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
     }
 }

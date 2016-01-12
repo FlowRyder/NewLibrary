@@ -1,48 +1,49 @@
 package com.netcracker.edu.businessobjects;
 
-import com.netcracker.edu.util.Check;
-import com.netcracker.edu.util.Input;
-
+import java.math.BigInteger;
 import java.util.Calendar;
 
 /**
- * Created by FlowRyder on 13.11.2015.
+ * Created by FlowRyder.
  */
 public class Account extends IDObject {
-    private Reader reader;
-    private Book book;
+    private BigInteger readerID;
+    private BigInteger bookID;
     private boolean isActual;
     private Calendar issueDate;
     private Calendar returnDate;
 
-    public Account(Reader reader, Book book, Calendar issueDate, Calendar returnDate) {
-        setReader(reader);
-        setBook(book);
+    public Account(BigInteger readerID, BigInteger bookID, Calendar issueDate, Calendar returnDate) {
+        setReaderID(readerID);
+        setBookID(bookID);
         setIsActual(true);
         setIssueDate(issueDate);
         setReturnDate(returnDate);
     }
 
-    public Reader getReader() {
-        return reader;
-
+    public BigInteger getReaderID() {
+        return readerID;
     }
 
-    public void setReader(Reader reader) {
-        Check.isNull(reader);
-        this.reader = reader;
+    public void setReaderID(BigInteger readerID) {
+        if (readerID == null || readerID.compareTo(BigInteger.ZERO) < 0) {
+            throw new IllegalArgumentException("Error: readerID shouldn't be null or negative value.");
+        }
+        this.readerID = readerID;
     }
 
-    public Book getBook() {
-        return book;
+    public BigInteger getBookID() {
+        return bookID;
     }
 
-    public void setBook(Book book) {
-        Check.isNull(book);
-        this.book = book;
+    public void setBookID(BigInteger bookID) {
+        if (bookID == null || bookID.compareTo(BigInteger.ZERO) < 0) {
+            throw new IllegalArgumentException("Error: readerID shouldn't be null or negative value.");
+        }
+        this.bookID = bookID;
     }
 
-    public boolean isActual() {
+    public boolean getIsActual() {
         return isActual;
     }
 
@@ -55,7 +56,9 @@ public class Account extends IDObject {
     }
 
     public void setIssueDate(Calendar issueDate) {
-        Check.isNull(issueDate);
+        if (issueDate == null) {
+            throw new IllegalArgumentException("Error: issueDate shouldn't be null.");
+        }
         this.issueDate = issueDate;
     }
 
@@ -64,41 +67,33 @@ public class Account extends IDObject {
     }
 
     public void setReturnDate(Calendar returnDate) {
-        Check.isNull(returnDate);
+        if (returnDate == null) {
+            throw new IllegalArgumentException("Error: returnDate shouldn't be null");
+        }
         this.returnDate = returnDate;
     }
 
     @Override
-    public String toString() {
-        return reader.getName() + " " + book.getBookType().getName() + " [" + getId() + "]";
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Account that = (Account) o;
+        return readerID.equals(that.readerID) && bookID.equals(that.bookID) && isActual == that.getIsActual()
+                && issueDate.get(Calendar.YEAR) == that.issueDate.get(Calendar.YEAR) &&
+                issueDate.get(Calendar.MONTH) == that.issueDate.get(Calendar.MONTH) &&
+                issueDate.get(Calendar.DAY_OF_MONTH) == issueDate.get(Calendar.DAY_OF_MONTH) &&
+                returnDate.get(Calendar.YEAR) == that.returnDate.get(Calendar.YEAR) &&
+                returnDate.get(Calendar.MONTH) == that.returnDate.get(Calendar.MONTH) &&
+                returnDate.get(Calendar.DAY_OF_MONTH) == returnDate.get(Calendar.DAY_OF_MONTH);
     }
 
     @Override
-    public String write() {
-        return this.getReader().write() + " " + this.getBook().write() + " " + this.isActual() + " " + Input.writeCalendar(issueDate) + " "
-                + Input.writeCalendar(returnDate) + " " + this.getId();
-    }
-
-    public static Account load(String[] parameters) {
-        String[] readerParameters = new String[5];
-        System.arraycopy(parameters, 0, readerParameters, 0, 5);
-        Reader reader = null;
-        reader = reader.load(readerParameters);
-        String[] bookParameters = new String[7];
-        System.arraycopy(parameters, 5, bookParameters, 0, 7);
-        Book book = null;
-        book = book.load(bookParameters);
-        String[] issueDateParameters = new String[3];
-        System.arraycopy(parameters, 13, issueDateParameters, 0, 3);
-        Calendar issueDate = Input.loadCalendar(issueDateParameters);
-        String[] returnDateParameters = new String[3];
-        System.arraycopy(parameters, 16, returnDateParameters, 0, 3);
-        Calendar returnDate = Input.loadCalendar(returnDateParameters);
-        Account account = new Account(reader, book, issueDate, returnDate);
-        if (parameters[12].equals("true")) {
-            account.setIsActual(true);
-        }
-        account.setId(Integer.parseInt(parameters[19]));
-        return account;
+    public String toString() {
+        return getReaderID() + " " + getBookID() + " " + getIsActual() + " [" + getId() + "]";
     }
 }
