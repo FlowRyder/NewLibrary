@@ -15,7 +15,7 @@ public class ExitCommand extends Command {
     @Override
     public int execute(String[] parameters) throws IOException {
         IDGenerator.getInstance().saveID();
-        FileDAO.getInstance().saveFileStorage();
+        //FileDAO.getInstance().saveFileStorage();
         return 0;
     }
 

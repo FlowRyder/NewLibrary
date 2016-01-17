@@ -1,10 +1,12 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Genre;
-import com.netcracker.edu.businessobjects.Librarian;
-import com.netcracker.edu.dao.FileDAO;
+import com.netcracker.edu.dao.DAO;
+import com.netcracker.edu.dao.DAOFactory;
 import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
+
+import java.sql.SQLException;
 
 /**
  * Created by FlowRyder
@@ -12,15 +14,15 @@ import org.apache.log4j.Logger;
 public class AddGenre extends Command {
     public static final Logger LOGGER = Logger.getLogger(AddGenre.class);
     public int parametersNumber = 2;
-    public Class classAccess = Librarian.class;
+    public DAO dao = DAOFactory.getDAO();
 
     @Override
-    public int execute(String[] parameters) {
+    public int execute(String[] parameters) throws SQLException {
         if (Context.getLoggedHolder() == null) {
             LOGGER.warn("Error: User isn't logged in.");
             return 1;
         }
-        if (!Context.getLoggedHolder().getClass().equals(classAccess)) {
+        if (!Context.getLoggedHolder().getRights()) {
             LOGGER.warn("Error: Access only for librarians.");
             return 2;
         }
@@ -35,7 +37,10 @@ public class AddGenre extends Command {
             LOGGER.warn("Error: Name shouldn't be null or void.");
             return 4;
         }
-        FileDAO.getInstance().addGenre(genre);
+        if (!dao.addGenre(genre)) {
+            LOGGER.info("Error: unsuccessfully query. Genre hasn't been added.");
+            return 18;
+        }
         LOGGER.info("Genre successfully added.");
         return 0;
     }

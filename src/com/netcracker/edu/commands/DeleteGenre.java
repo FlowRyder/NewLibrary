@@ -1,12 +1,12 @@
 package com.netcracker.edu.commands;
 
-import com.netcracker.edu.businessobjects.Genre;
-import com.netcracker.edu.businessobjects.Librarian;
-import com.netcracker.edu.dao.FileDAO;
+import com.netcracker.edu.dao.DAO;
+import com.netcracker.edu.dao.DAOFactory;
 import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
+import java.sql.SQLException;
 
 /**
  * Created by FlowRyder
@@ -14,15 +14,17 @@ import java.math.BigInteger;
 public class DeleteGenre extends Command {
     public static final Logger LOGGER = Logger.getLogger(DeleteGenre.class);
     public int parametersNumber = 2;
-    public Class classAccess = Librarian.class;
+    public DAO dao = DAOFactory.getDAO();
 
+    //todo ??? ????????? ?????? ????????????? ?? ???????? id ? ?????? ?????? ?????????? ???????
+    //???? ?????? ??? 16
     @Override
-    public int execute(String[] parameters) {
+    public int execute(String[] parameters) throws SQLException {
         if (Context.getLoggedHolder() == null) {
             LOGGER.warn("Error: User isn't logged in.");
             return 1;
         }
-        if (!Context.getLoggedHolder().getClass().equals(classAccess)) {
+        if (!Context.getLoggedHolder().getRights()) {
             LOGGER.warn("Error: Access only for librarians.");
             return 2;
         }
@@ -30,18 +32,14 @@ public class DeleteGenre extends Command {
             LOGGER.warn("Error: Wrong number of parameters.");
             return 3;
         }
-        Genre genre;
+        boolean result;
         try {
-            genre = FileDAO.getInstance().loadGenre(new BigInteger(parameters[1]));
+            result = dao.deleteGenre(new BigInteger((parameters[1])));
         } catch (NumberFormatException e) {
             LOGGER.warn("Error: ID should be number.");
             return 6;
         }
-        if (genre == null) {
-            LOGGER.warn("Error: Wrong ID.");
-            return 16;
-        }
-        if (!FileDAO.getInstance().deleteGenre(genre)) {
+        if (!result) {
             LOGGER.warn("Error: Unsuccessful delete.");
             return 15;
         }

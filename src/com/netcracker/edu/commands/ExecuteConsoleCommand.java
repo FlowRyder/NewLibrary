@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -20,7 +21,7 @@ import java.util.Scanner;
 public class ExecuteConsoleCommand {
     public static final Logger LOGGER = Logger.getLogger(ExecuteConsoleCommand.class);
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
         Scanner scanner = new Scanner(System.in);
         LOGGER.info("To use console app enter console");
         LOGGER.info("To use scenario enter scenario");
@@ -38,10 +39,9 @@ public class ExecuteConsoleCommand {
         }
     }
 
-    public static void console() throws IOException {
+    public static void console() throws IOException, SQLException {
         while (true) {
             Scanner scanner = new Scanner(System.in);
-            //FileDAO.getInstance().show();
             LOGGER.info("Enter command:");
             String value = scanner.nextLine();
             String[] parameters = value.split(" ");
@@ -52,7 +52,7 @@ public class ExecuteConsoleCommand {
         }
     }
 
-    public static void scenario() {
+    public static void scenario() throws SQLException {
         File file = new File("C:\\Users\\FlowRyder\\IdeaProjects\\Library\\src\\com\\netcracker\\edu\\data\\scenario.txt");
         try (FileReader fileReader = new FileReader(file)) {
             char[] buffer = new char[(int) file.length()];

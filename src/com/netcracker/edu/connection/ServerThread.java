@@ -29,8 +29,8 @@ public class ServerThread implements Runnable {
             while ((inputSource = input.readLine()) != null) {
                 try {
                     String[] parameters = inputSource.split(" ");
-                    int result = CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
-                    output.println(result);
+                  //  int result = CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
+                  //  output.println(result);
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage());
                 }

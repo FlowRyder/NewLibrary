@@ -1,11 +1,13 @@
 package com.netcracker.edu.commands;
 
-import com.netcracker.edu.businessobjects.*;
-import com.netcracker.edu.dao.FileDAO;
+import com.netcracker.edu.businessobjects.BookType;
+import com.netcracker.edu.dao.DAO;
+import com.netcracker.edu.dao.DAOFactory;
 import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
+import java.sql.SQLException;
 
 /**
  * Created by FlowRyder
@@ -13,15 +15,16 @@ import java.math.BigInteger;
 public class AddBookType extends Command {
     public static final Logger LOGGER = Logger.getLogger(AddBookType.class);
     public int parametersNumber = 4;
-    public Class classAccess = Librarian.class;
+    //todo ???????? ??? ??????????? ???? dao ? ???? ??????????? ?????? Command
+    public DAO dao = DAOFactory.getDAO();
 
     @Override
-    public int execute(String[] parameters) {
+    public int execute(String[] parameters) throws SQLException {
         if (Context.getLoggedHolder() == null) {
             LOGGER.warn("Error: User isn't logged in.");
             return 1;
         }
-        if (!Context.getLoggedHolder().getClass().equals(classAccess)) {
+        if (!Context.getLoggedHolder().getRights()) {
             LOGGER.warn("Error: Access only for librarians.");
             return 2;
         }
@@ -40,7 +43,10 @@ public class AddBookType extends Command {
             LOGGER.warn("Error: ID shouldn't be null or negative value.");
             return 5;
         }
-        FileDAO.getInstance().addBookType(bookType);
+        if (!dao.addBookType(bookType)) {
+            LOGGER.info("Error: unsuccessfully query. Book type hasn't been added.");
+            return 18;
+        }
         LOGGER.info("Book type successfully added.");
         return 0;
     }

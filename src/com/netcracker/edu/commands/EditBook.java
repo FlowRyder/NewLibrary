@@ -1,12 +1,13 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Book;
-import com.netcracker.edu.businessobjects.Librarian;
-import com.netcracker.edu.dao.FileDAO;
+import com.netcracker.edu.dao.DAO;
+import com.netcracker.edu.dao.DAOFactory;
 import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
+import java.sql.SQLException;
 
 /**
  * Created by FlowRyder.
@@ -14,15 +15,15 @@ import java.math.BigInteger;
 public class EditBook extends Command {
     public static final Logger LOGGER = Logger.getLogger(EditBook.class);
     public int parametersNumber = 3;
-    public Class classAccess = Librarian.class;
+    public DAO dao = DAOFactory.getDAO();
 
     @Override
-    public int execute(String[] parameters) {
+    public int execute(String[] parameters) throws SQLException {
         if (Context.getLoggedHolder() == null) {
             LOGGER.warn("Error: User isn't logged in.");
             return 1;
         }
-        if (!Context.getLoggedHolder().getClass().equals(classAccess)) {
+        if (!Context.getLoggedHolder().getRights()) {
             LOGGER.warn("Error: Access only for librarians.");
             return 2;
         }
@@ -32,22 +33,19 @@ public class EditBook extends Command {
         }
         Book book;
         try {
-            book = FileDAO.getInstance().loadBook(new BigInteger(parameters[1]));
+            book = new Book(new BigInteger(parameters[2]));
+            book.setId(new BigInteger(parameters[1]));
         } catch (NumberFormatException e) {
             LOGGER.warn("Error: ID should be number.");
             return 6;
+        } catch (IllegalArgumentException e) {
+            LOGGER.warn("Error: Name shouldn't be null or void.");
+            return 4;
         }
-        if (book == null) {
-            LOGGER.warn("Error: Wrong ID.");
-            return 16;
+        if (!dao.updateBook(book)) {
+            LOGGER.info("Error: unsuccessfully query. Book hasn't been updated.");
+            return 18;
         }
-        try {
-            book.setBookTypeID(BigInteger.valueOf(Long.getLong(parameters[2])));
-        } catch (NumberFormatException e) {
-            LOGGER.warn("Error: ID should be number.");
-            return 6;
-        }
-        FileDAO.getInstance().updateBook(book);
         LOGGER.info("Book successfully edited.");
         return 0;
     }

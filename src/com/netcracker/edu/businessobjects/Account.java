@@ -1,6 +1,7 @@
 package com.netcracker.edu.businessobjects;
 
 import java.math.BigInteger;
+import java.sql.Date;
 import java.util.Calendar;
 
 /**
@@ -10,10 +11,10 @@ public class Account extends IDObject {
     private BigInteger readerID;
     private BigInteger bookID;
     private boolean isActual;
-    private Calendar issueDate;
-    private Calendar returnDate;
+    private Date issueDate;
+    private Date returnDate;
 
-    public Account(BigInteger readerID, BigInteger bookID, Calendar issueDate, Calendar returnDate) {
+    public Account(BigInteger readerID, BigInteger bookID, Date issueDate, Date returnDate) {
         setReaderID(readerID);
         setBookID(bookID);
         setIsActual(true);
@@ -51,22 +52,22 @@ public class Account extends IDObject {
         this.isActual = isActual;
     }
 
-    public Calendar getIssueDate() {
+    public Date getIssueDate() {
         return issueDate;
     }
 
-    public void setIssueDate(Calendar issueDate) {
+    public void setIssueDate(Date issueDate) {
         if (issueDate == null) {
             throw new IllegalArgumentException("Error: issueDate shouldn't be null.");
         }
         this.issueDate = issueDate;
     }
 
-    public Calendar getReturnDate() {
+    public Date getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(Calendar returnDate) {
+    public void setReturnDate(Date returnDate) {
         if (returnDate == null) {
             throw new IllegalArgumentException("Error: returnDate shouldn't be null");
         }
@@ -84,12 +85,7 @@ public class Account extends IDObject {
 
         Account that = (Account) o;
         return readerID.equals(that.readerID) && bookID.equals(that.bookID) && isActual == that.getIsActual()
-                && issueDate.get(Calendar.YEAR) == that.issueDate.get(Calendar.YEAR) &&
-                issueDate.get(Calendar.MONTH) == that.issueDate.get(Calendar.MONTH) &&
-                issueDate.get(Calendar.DAY_OF_MONTH) == issueDate.get(Calendar.DAY_OF_MONTH) &&
-                returnDate.get(Calendar.YEAR) == that.returnDate.get(Calendar.YEAR) &&
-                returnDate.get(Calendar.MONTH) == that.returnDate.get(Calendar.MONTH) &&
-                returnDate.get(Calendar.DAY_OF_MONTH) == returnDate.get(Calendar.DAY_OF_MONTH);
+                && issueDate.equals(that.getIssueDate()) && returnDate.equals(that.getReturnDate());
     }
 
     @Override

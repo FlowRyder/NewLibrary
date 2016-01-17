@@ -14,8 +14,8 @@ public class FileStorage implements Serializable {
     private HashSet<BookType> bookTypes;
     private HashSet<Book> books;
     private HashSet<Account> accounts;
-    private HashSet<Librarian> librarians;
-    private HashSet<Reader> readers;
+  //  private HashSet<Librarian> librarians;
+  //  private HashSet<Reader> readers;
 
     public HashSet<Genre> getGenres() {
         if (genres == null) {
@@ -52,7 +52,7 @@ public class FileStorage implements Serializable {
         return accounts;
     }
 
-    public HashSet<Librarian> getLibrarians() {
+ /*   public HashSet<Librarian> getLibrarians() {
         if (librarians == null) {
             librarians = new HashSet<>();
         }
@@ -64,5 +64,5 @@ public class FileStorage implements Serializable {
             readers = new HashSet<>();
         }
         return readers;
-    }
+    }*/
 }

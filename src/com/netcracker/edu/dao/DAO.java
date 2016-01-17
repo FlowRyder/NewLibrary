@@ -10,61 +10,41 @@ import java.math.BigInteger;
 import java.sql.SQLException;
 
 public interface DAO {
-    void addAccount(Account account);
+    boolean addAccount(Account account) throws SQLException;
 
-    void addAuthor(Author author) throws SQLException;
+    boolean addAuthor(Author author) throws SQLException;
 
-    void addBook(Book book) throws SQLException;
+    boolean addBook(Book book) throws SQLException;
 
-    void addBookType(BookType bookType) throws SQLException;
+    boolean addBookType(BookType bookType) throws SQLException;
 
-    void addGenre(Genre genre) throws SQLException;
+    boolean addGenre(Genre genre) throws SQLException;
 
-    void addReader(Reader reader) throws SQLException;
+    boolean addUser(User user) throws SQLException;
 
-    void addLibrarian(Librarian librarian) throws SQLException;
+    boolean deleteAccount(BigInteger id) throws SQLException;
 
-    Account loadAccount(BigInteger id);
+    boolean deleteAuthor(BigInteger id) throws SQLException;
 
-    Author loadAuthor(BigInteger id);
+    boolean deleteBook(BigInteger id) throws SQLException;
 
-    Book loadBook(BigInteger id);
+    boolean deleteBookType(BigInteger id) throws SQLException;
 
-    BookType loadBookType(BigInteger id);
+    boolean deleteGenre(BigInteger id) throws SQLException;
 
-    Genre loadGenre(BigInteger id);
+    boolean deleteUser(BigInteger id) throws SQLException;
 
-    Reader loadReader(BigInteger id);
+    boolean updateAccount(Account account) throws SQLException;
 
-    Librarian loadLibrarian(BigInteger id);
+    boolean updateAuthor(Author author) throws SQLException;
 
-    boolean deleteAccount(Account account);
+    boolean updateBook(Book book) throws SQLException;
 
-    boolean deleteAuthor(Author author);
+    boolean updateBookType(BookType bookType) throws SQLException;
 
-    boolean deleteBook(Book book);
+    boolean updateGenre(Genre genre) throws SQLException;
 
-    boolean deleteBookType(BookType bookType);
+    boolean updateUser(User user) throws SQLException;
 
-    boolean deleteGenre(Genre genre);
-
-    boolean deleteReader(Reader reader);
-
-    boolean deleteLibrarian(Librarian librarian);
-
-    void updateAccount(Account account);
-
-    void updateAuthor(Author author);
-
-    void updateBook(Book book);
-
-    void updateBookType(BookType bookType);
-
-    void updateGenre(Genre genre);
-
-    void updateReader(Reader reader);
-
-    void updateLibrarian(Librarian librarian);
-
-    User findByLogin(String login);
+    User findByLogin(String login) throws SQLException;
 }

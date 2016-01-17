@@ -1,22 +1,20 @@
 package com.netcracker.edu.dao;
 
 import com.netcracker.edu.businessobjects.*;
-import com.netcracker.edu.businessobjects.Reader;
 import com.netcracker.edu.persist.FileStorage;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.util.Collections;
-import java.util.HashSet;
+import java.sql.SQLException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created by FlowRyder
  */
-public class FileDAO implements DAO {
-    public static final Logger LOGGER = Logger.getLogger(FileDAO.class);
+public class FileDAO /*implements DAO*/ {
+    /*public static final Logger LOGGER = Logger.getLogger(FileDAO.class);
     private static FileDAO INSTANCE = null;
     private static FileStorage fileStorage;
     private String sourceFileLocation = "C:\\Users\\FlowRyder\\IdeaProjects\\" +
@@ -109,6 +107,11 @@ public class FileDAO implements DAO {
         } finally {
             genreWL.unlock();
         }
+    }
+
+    @Override
+    public void addUser(User user) throws SQLException {
+
     }
 
     @Override
@@ -304,6 +307,11 @@ public class FileDAO implements DAO {
     }
 
     @Override
+    public void deleteUser(User user) throws SQLException {
+
+    }
+
+    @Override
     public boolean deleteReader(Reader reader) {
         boolean result;
         readerWL.lock();
@@ -400,6 +408,11 @@ public class FileDAO implements DAO {
         } finally {
             genreWL.unlock();
         }
+    }
+
+    @Override
+    public void updateUser(User user) throws SQLException {
+
     }
 
     @Override
@@ -515,5 +528,5 @@ public class FileDAO implements DAO {
         for (Account account : fileStorage.getAccounts()) {
             LOGGER.info(account.toString());
         }
-    }
+    }*/
 }

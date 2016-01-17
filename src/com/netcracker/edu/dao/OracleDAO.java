@@ -1,13 +1,14 @@
 package com.netcracker.edu.dao;
 
 import com.netcracker.edu.businessobjects.*;
-import com.netcracker.edu.util.ConnectionParameters;
+import com.netcracker.edu.util.ConnectionPool;
+import com.netcracker.edu.util.JDBCHandler;
 import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 
@@ -16,265 +17,300 @@ import java.util.Locale;
  */
 public class OracleDAO implements DAO {
     public static final Logger LOGGER = Logger.getLogger(OracleDAO.class);
-    private static OracleDAO INSTANCE;
-    private Connection connection;
+    private static OracleDAO INSTANCE = new OracleDAO();
 
-    private OracleDAO() {
-        // temporary thing(because OracleDAO not integrated in consoleApp yet)
-        String[] parametersOfConnection = ConnectionParameters.getPaprametersOfConnection();
+    static {
         Locale.setDefault(Locale.US);
-        try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            connection = DriverManager.getConnection(parametersOfConnection[0],
-                    parametersOfConnection[1], parametersOfConnection[2]);
-        } catch (ClassNotFoundException | SQLException e) {
-            LOGGER.warn(e.getMessage());
-        }
     }
 
     public static synchronized OracleDAO getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new OracleDAO();
-        }
         return INSTANCE;
     }
 
     @Override
-    public void addAccount(Account account) {
+    public boolean addAccount(Account account) throws SQLException {
+        if (account == null) {
+            throw new IllegalArgumentException("Error: Account shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement
+                = connection.prepareStatement
+                ("INSERT INTO ACCOUNTS(STATUS,ISSUE_DATE,RETURN_DATE,ID,READER_ID,BOOK_ID) VALUES (?,?,?,?,?,?)");
+        preparedStatement.setInt(1, 1);
+        preparedStatement.setDate(2, account.getIssueDate());
+        preparedStatement.setDate(3, account.getReturnDate());
+        preparedStatement.setInt(4, account.getId().intValue());
+        preparedStatement.setInt(5, account.getReaderID().intValue());
+        preparedStatement.setInt(6, account.getBookID().intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
     }
 
     @Override
-    public void addAuthor(Author author) throws SQLException {
+    public boolean addAuthor(Author author) throws SQLException {
         if (author == null) {
             throw new IllegalArgumentException("Error: Author shouldn't be null");
         }
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO AUTHORS(NAME,ID) VALUES (?,?)");
-        try {
-            preparedStatement.setString(1, author.getName());
-            preparedStatement.setLong(2, author.getId().longValue());
-        } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
-        } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
-        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement
+                = connection.prepareStatement("INSERT INTO AUTHORS(NAME,ID) VALUES (?,?)");
+        preparedStatement.setString(1, author.getName());
+        preparedStatement.setInt(2, author.getId().intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
     }
 
     @Override
-    public void addBook(Book book) throws SQLException {
+    public boolean addBook(Book book) throws SQLException {
         if (book == null) {
             throw new IllegalArgumentException("Error: Book shouldn't be null");
         }
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO BOOKS(BOOKTYPE_ID,ID) VALUES (?,?)");
-        try {
-            preparedStatement.setLong(1, book.getBookTypeID().longValue());
-            preparedStatement.setLong(2, book.getId().longValue());
-            preparedStatement.executeQuery();
-        } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
-        } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
-        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("INSERT INTO BOOKS(ID, BOOKTYPE_ID) VALUES (?,?)");
+        preparedStatement.setLong(1, book.getId().longValue());
+        preparedStatement.setLong(2, book.getBookTypeID().longValue());
+        return JDBCHandler.execute(preparedStatement, connection);
     }
 
     @Override
-    public void addBookType(BookType bookType) throws SQLException {
+    public boolean addBookType(BookType bookType) throws SQLException {
         if (bookType == null) {
-            throw new IllegalArgumentException("Error: Genre shouldn't be null");
+            throw new IllegalArgumentException("Error: Book type shouldn't be null");
         }
+        Connection connection = ConnectionPool.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                "BOOKTYPES(NAME,GENRE_ID,AUTHOR_ID,ID) VALUES (?,?,?,?)");
-        try {
-            preparedStatement.setString(1, bookType.getName());
-            preparedStatement.setLong(2, bookType.getGenreID().longValue());
-            preparedStatement.setLong(3, bookType.getAuthorID().longValue());
-            preparedStatement.setLong(4, bookType.getId().longValue());
-            preparedStatement.executeQuery();
-        } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
-        } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
-        }
+                "BOOKTYPES(NAME,ID,AUTHOR_ID,GENRE_ID) VALUES (?,?,?,?)");
+        preparedStatement.setString(1, bookType.getName());
+        preparedStatement.setLong(2, bookType.getId().longValue());
+        preparedStatement.setLong(3, bookType.getAuthorID().longValue());
+        preparedStatement.setLong(4, bookType.getGenreID().longValue());
+        return JDBCHandler.execute(preparedStatement, connection);
     }
 
     @Override
-    public void addGenre(Genre genre) throws SQLException {
+    public boolean addGenre(Genre genre) throws SQLException {
         if (genre == null) {
             throw new IllegalArgumentException("Error: Genre shouldn't be null");
         }
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO GENRES(NAME,ID) VALUES (?,?)");
-        try {
-            preparedStatement.setString(1, genre.getName());
-            preparedStatement.setLong(2, genre.getId().longValue());
-            preparedStatement.executeQuery();
-        } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
-        } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
-        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement
+                = connection.prepareStatement("INSERT INTO GENRES(NAME,ID) VALUES (?,?)");
+        preparedStatement.setString(1, genre.getName());
+        preparedStatement.setInt(2, genre.getId().intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
     }
 
     @Override
-    public void addReader(Reader reader) throws SQLException {
-        if (reader == null) {
+    public boolean addUser(User user) throws SQLException {
+        if (user == null) {
+            throw new IllegalArgumentException("Error: User shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
+                "USERS(NAME,LOGIN,EMAIL,PASSWORD,ID,RIGHTS) VALUES (?,?,?,?,?,?)");
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getLogin());
+        preparedStatement.setString(3, user.getEmail());
+        preparedStatement.setString(4, new String(user.getPassword()));
+        preparedStatement.setInt(5, user.getId().intValue());
+        if (user.getRights()) {
+            preparedStatement.setInt(6, 1);
+        } else {
+            preparedStatement.setInt(6, 0);
+        }
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean deleteAccount(BigInteger id) throws SQLException {
+        if (id == null) {
+            throw new IllegalArgumentException("Error: ID shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("UPDATE ACCOUNTS SET STATUS = ? WHERE ID = ?");
+        preparedStatement.setInt(1, 0);
+        preparedStatement.setInt(2, id.intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean deleteAuthor(BigInteger id) throws SQLException {
+        if (id == null) {
+            throw new IllegalArgumentException("Error: ID shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement
+                = connection.prepareStatement("DELETE AUTHORS WHERE ID = ?");
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean deleteBook(BigInteger id) throws SQLException {
+        if (id == null) {
+            throw new IllegalArgumentException("Error: ID shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement
+                = connection.prepareStatement("DELETE BOOKS WHERE ID = ?");
+        preparedStatement.setInt(1, id.intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean deleteBookType(BigInteger id) throws SQLException {
+        if (id == null) {
+            throw new IllegalArgumentException("Error: ID shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement
+                = connection.prepareStatement("DELETE BOOKTYPES WHERE ID = ?");
+        preparedStatement.setInt(1, id.intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean deleteGenre(BigInteger id) throws SQLException {
+        if (id == null) {
+            throw new IllegalArgumentException("Error: ID shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement
+                = connection.prepareStatement("DELETE GENRES WHERE ID = ?");
+        preparedStatement.setInt(1, id.intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean deleteUser(BigInteger id) throws SQLException {
+        if (id == null) {
+            throw new IllegalArgumentException("Error: ID shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement
+                = connection.prepareStatement("DELETE USERS WHERE ID = ?");
+        preparedStatement.setInt(1, id.intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean updateAccount(Account account) throws SQLException {
+        if (account == null) {
+            throw new IllegalArgumentException("Error: User shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE USERS SET ISSUE_DATE = ?," +
+                " RETURN_DATE = ?, READER_ID = ?, BOOK_ID = ?, WHERE ID = ?");
+        preparedStatement.setDate(1, account.getIssueDate());
+        preparedStatement.setDate(2, account.getReturnDate());
+        preparedStatement.setInt(3, account.getReaderID().intValue());
+        preparedStatement.setInt(4, account.getBookID().intValue());
+        preparedStatement.setInt(5, account.getId().intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean updateAuthor(Author author) throws SQLException {
+        if (author == null) {
+            throw new IllegalArgumentException("Error: Author shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("UPDATE AUTHORS SET NAME = ? WHERE ID = ?");
+        preparedStatement.setString(1, author.getName());
+        preparedStatement.setInt(2, author.getId().intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean updateBook(Book book) throws SQLException {
+        if (book == null) {
+            throw new IllegalArgumentException("Error: Book shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("UPDATE BOOKS SET BOOKTYPE_ID = ? WHERE ID = ?");
+        preparedStatement.setInt(1, book.getBookTypeID().intValue());
+        preparedStatement.setInt(2, book.getId().intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean updateBookType(BookType bookType) throws SQLException {
+        if (bookType == null) {
+            throw new IllegalArgumentException("Error: Book type shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("UPDATE BOOKTYPES SET GENRE_ID = ?, AUTHOR_ID = ? WHERE ID = ?");
+        preparedStatement.setInt(1, bookType.getGenreID().intValue());
+        preparedStatement.setInt(2, bookType.getAuthorID().intValue());
+        preparedStatement.setInt(3, bookType.getId().intValue());
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean updateGenre(Genre genre) throws SQLException {
+        if (genre == null) {
             throw new IllegalArgumentException("Error: Genre shouldn't be null");
         }
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                "READERS(NAME,LOGIN,EMAIL,PASSWORD,ID) VALUES (?,?,?,?,?)");
-        try {
-            preparedStatement.setString(1, reader.getName());
-            preparedStatement.setString(2, reader.getLogin());
-            preparedStatement.setString(3, reader.getEmail());
-            preparedStatement.setString(4, reader.getPassword().toString());
-            preparedStatement.setLong(5, reader.getId().longValue());
-            preparedStatement.executeQuery();
-        } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement =
+                connection.prepareStatement("UPDATE GENRES SET NAME = ? WHERE ID = ?");
+        preparedStatement.setString(1, genre.getName());
+        preparedStatement.setInt(2, genre.getId().intValue());
+
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public boolean updateUser(User user) throws SQLException {
+        if (user == null) {
+            throw new IllegalArgumentException("Error: User shouldn't be null");
+        }
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE USERS SET NAME = ?, LOGIN = ?," +
+                "EMAIL = ?, PASSWORD = ?, RIGHTS = ?, WHERE ID = ?");
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getLogin());
+        preparedStatement.setString(3, user.getEmail());
+        preparedStatement.setString(4, new String(user.getPassword()));
+        preparedStatement.setInt(6, user.getId().intValue());
+        if (user.getRights()) {
+            preparedStatement.setInt(5, 1);
+        } else {
+            preparedStatement.setInt(5, 0);
+        }
+
+        return JDBCHandler.execute(preparedStatement, connection);
+    }
+
+    @Override
+    public User findByLogin(String login) throws SQLException {
+        if (login == null) {
+            throw new IllegalArgumentException("Error: Login shouldn't be null");
+        }
+        ResultSet resultSet = null;
+        Connection connection = ConnectionPool.getConnection();
+        try (PreparedStatement preparedStatement =
+                     connection.prepareStatement("SELECT NAME, LOGIN, EMAIL, PASSWORD, ID, RIGHTS " +
+                             "FROM USERS WHERE LOGIN = ?")) {
+            preparedStatement.setString(1, login);
+            resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()) {
+                User user = new User(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getString(4).toCharArray());
+                user.setId(BigInteger.valueOf(resultSet.getInt(5)));
+                if (resultSet.getInt(6) == 1) {
+                    user.setRights(true);
+                }
+                return user;
+            }
+            return null;
         } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
+            ConnectionPool.releaseConnection(connection);
+            if (resultSet != null) {
+                resultSet.close();
             }
         }
-    }
-
-    @Override
-    public void addLibrarian(Librarian librarian) throws SQLException {
-        if (librarian == null) {
-            throw new IllegalArgumentException("Error: Genre shouldn't be null");
-        }
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " +
-                "READERS(NAME,LOGIN,EMAIL,PASSWORD,ID) VALUES (?,?,?,?,?)");
-        try {
-            preparedStatement.setString(1, librarian.getName());
-            preparedStatement.setString(2, librarian.getLogin());
-            preparedStatement.setString(3, librarian.getEmail());
-            preparedStatement.setString(4, librarian.getPassword().toString());
-            preparedStatement.setLong(5, librarian.getId().longValue());
-            preparedStatement.executeQuery();
-        } catch (SQLException e) {
-            LOGGER.warn(e.getMessage());
-        } finally {
-            if (preparedStatement != null) {
-                preparedStatement.close();
-            }
-        }
-    }
-
-    @Override
-    public Account loadAccount(BigInteger id) {
-        return null;
-    }
-
-    @Override
-    public Author loadAuthor(BigInteger id) {
-        return null;
-    }
-
-    @Override
-    public Book loadBook(BigInteger id) {
-        return null;
-    }
-
-    @Override
-    public BookType loadBookType(BigInteger id) {
-        return null;
-    }
-
-    @Override
-    public Genre loadGenre(BigInteger id) {
-        return null;
-    }
-
-    @Override
-    public Reader loadReader(BigInteger id) {
-        return null;
-    }
-
-    @Override
-    public Librarian loadLibrarian(BigInteger id) {
-        return null;
-    }
-
-    @Override
-    public boolean deleteAccount(Account account) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteAuthor(Author author) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteBook(Book book) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteBookType(BookType bookType) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteGenre(Genre genre) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteReader(Reader reader) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteLibrarian(Librarian librarian) {
-        return false;
-    }
-
-
-    @Override
-    public void updateAccount(Account account) {
-
-    }
-
-    @Override
-    public void updateAuthor(Author author) {
-
-    }
-
-    @Override
-    public void updateBook(Book book) {
-
-    }
-
-    @Override
-    public void updateBookType(BookType bookType) {
-
-    }
-
-    @Override
-    public void updateGenre(Genre genre) {
-
-    }
-
-    @Override
-    public void updateReader(Reader reader) {
-
-    }
-
-    @Override
-    public void updateLibrarian(Librarian librarian) {
-
-    }
-
-    @Override
-    public User findByLogin(String login) {
-        return null;
     }
 }

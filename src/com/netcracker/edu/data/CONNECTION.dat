@@ -1,0 +1,5 @@
+jdbc:oracle:thin:@localhost:1521:xe
+OracleDAO
+library
+do1it2for3library4
+1

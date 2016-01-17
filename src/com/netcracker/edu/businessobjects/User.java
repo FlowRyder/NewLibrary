@@ -9,12 +9,14 @@ public class User extends NamedObject {
     private String login;
     private String email;
     private char[] password;
+    private boolean rights;
 
     public User(String name, String login, String email, char[] password) {
         super(name);
         setLogin(login);
         setEmail(email);
         setPassword(password);
+        rights = false;
     }
 
     public String getLogin() {
@@ -48,6 +50,14 @@ public class User extends NamedObject {
             throw new IllegalArgumentException("Error: password shouldn't be null or empty.");
         }
         this.password = password;
+    }
+
+    public boolean getRights() {
+        return this.rights;
+    }
+
+    public void setRights(boolean rights) {
+        this.rights = rights;
     }
 
     @Override

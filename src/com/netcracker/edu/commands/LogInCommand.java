@@ -21,8 +21,8 @@ public class LogInCommand extends Command {
             LOGGER.warn("Error: Wrong number of parameters.");
             return 3;
         }
-        User user = FileDAO.getInstance().findByLogin(parameters[1]);
-
+        //User user = FileDAO.getInstance().findByLogin(parameters[1]);
+User user=null;
         /*WARNING! Different warning message for wrong login/password
         is unsafe, this is temporary usage for troubleshooting.*/
 

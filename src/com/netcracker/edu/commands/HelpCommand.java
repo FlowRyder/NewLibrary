@@ -13,10 +13,10 @@ public class HelpCommand extends Command {
 
     @Override
     public int execute(String[] parameters) throws IOException {
-        Collection<Command> helpCollection = CommandEngine.getInstance().getCommandMap().values();
+       /* Collection<Command> helpCollection = CommandEngine.getInstance().getCommandMap().values();
         for (Command command : helpCollection) {
             LOGGER.info(command.getHelp());
-        }
+        }*/
         return 0;
     }
 

@@ -1,11 +1,12 @@
 package com.netcracker.edu.commands;
 
-import com.netcracker.edu.businessobjects.Librarian;
-import com.netcracker.edu.businessobjects.Reader;
-import com.netcracker.edu.dao.FileDAO;
+import com.netcracker.edu.businessobjects.User;
+import com.netcracker.edu.dao.DAO;
+import com.netcracker.edu.dao.DAOFactory;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,9 +19,10 @@ public class RegisterCommand extends Command {
     Pattern loginPatter = Pattern.compile("^(?=.{3,24})[a-z][a-z0-9]*[._-]?[a-z0-9]+$");
     Pattern emailPattern = Pattern.compile("^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$");
     Pattern passwordPattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$");
-
+    public DAO dao = DAOFactory.getDAO();
+    //todo ????????? ?? ????? ????? ??????????? ? LoggedUser?
     @Override
-    public int execute(String[] parameters) throws IOException {
+    public int execute(String[] parameters) throws IOException, SQLException {
         if (parameters.length != parametersNumber) {
             LOGGER.warn("Error: Wrong number of parameters.");
             return 3;
@@ -43,27 +45,22 @@ public class RegisterCommand extends Command {
             LOGGER.warn("Error: Invalid format of password.");
             return 9;
         }
-        if (parameters[5].equals("reader")) {
-            Reader reader;
-            try {
-                reader = new Reader(parameters[1], parameters[2], parameters[3], parameters[4].toCharArray());
-            } catch (IllegalArgumentException e) {
-                LOGGER.warn("Error: Name shouldn't be null or void.");
-                return 4;
-            }
-            FileDAO.getInstance().addReader(reader);
-        } else if (parameters[5].equals("librarian")) {
-            Librarian librarian;
-            try {
-                librarian = new Librarian(parameters[1], parameters[2], parameters[3], parameters[4].toCharArray());
-            } catch (IllegalArgumentException e) {
-                LOGGER.warn("Error: Name shouldn't be null or void.");
-                return 4;
-            }
-            FileDAO.getInstance().addLibrarian(librarian);
+        User user;
+        try {
+            user = new User(parameters[1], parameters[2], parameters[3], parameters[4].toCharArray());
+        } catch (IllegalArgumentException e) {
+            LOGGER.warn("Error: Name shouldn't be null or void.");
+            return 4;
+        }
+        if (parameters[5].equals("librarian")) {
+            user.setRights(true);
         } else {
             LOGGER.warn("Error: Role should be reader or librarian.");
             return 10;
+        }
+        if (!dao.addUser(user)) {
+            LOGGER.info("Error: unsuccessfully query. User hasn't been registered.");
+            return 18;
         }
         LOGGER.info("User successfully registered.");
         return 0;

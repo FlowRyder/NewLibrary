@@ -1,0 +1,70 @@
+10:42:42,912  WARN main OracleDAO:addGenre:124 - ORA-00001: unique constraint (LIBRARY.GENRES_PK) violated
+
+10:48:31,131  WARN main test:main:16 - What da fuck.
+11:04:12,091  WARN main test:main:16 - What da fuck.
+11:05:04,844  WARN main test:main:16 - What da fuck.
+11:05:04,850  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+11:05:05,108  INFO main test:main:21 - Genre wasn't added.
+11:06:09,488  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+11:06:09,722  INFO main test:main:20 - Genre wasn't added.
+11:06:25,462  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+11:06:25,666  WARN main OracleDAO:addGenre:126 - ORA-12899: value too large for column "LIBRARY"."GENRES"."NAME" (actual: 63, maximum: 20)
+
+11:06:25,668  INFO main test:main:20 - Genre wasn't added.
+11:08:14,576  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+11:08:27,632  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+11:08:27,841  WARN main OracleDAO:addGenre:126 - ORA-00001: unique constraint (LIBRARY.GENRES_PK) violated
+
+11:08:27,844  INFO main test:main:20 - Genre wasn't added.
+11:09:24,110  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+11:09:24,341  INFO main test:main:21 - Genre added successfully.
+11:13:59,144  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+11:13:59,421  INFO main test:main:22 - Genre added successfully.
+11:18:11,358  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+11:18:11,556  WARN main OracleDAO:addBookType:110 - ORA-00904: "AUTHOR_ID": invalid identifier
+
+11:18:11,557  INFO main test:main:25 - Genre wasn't added.
+12:13:03,329  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+12:13:03,523  WARN main OracleDAO:addBookType:110 - ORA-00904: "GENRE_ID": invalid identifier
+
+12:13:03,525  INFO main test:main:25 - Genre wasn't added.
+12:15:08,768  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+12:22:30,927  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+12:22:31,161  WARN main OracleDAO:addBookType:110 - ORA-02291: integrity constraint (LIBRARY.BOOKTYPES_FK2) violated - parent key not found
+
+12:22:31,203  INFO main test:main:25 - Genre wasn't added.
+12:24:46,283  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+12:24:46,530  WARN main OracleDAO:addBookType:110 - ORA-02291: integrity constraint (LIBRARY.BOOKTYPES_FK2) violated - parent key not found
+
+12:24:46,532  INFO main test:main:25 - Genre wasn't added.
+12:25:37,909  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+12:25:38,101  INFO main test:main:23 - Genre added successfully.
+12:33:25,171  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+12:33:25,389  INFO main test:main:24 - Genre added successfully.
+12:38:25,923  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+12:38:26,182  INFO main test:main:21 - Genre added successfully.
+12:41:48,763  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+12:41:48,765  INFO main test:main:20 - [C@37ada1e0
+12:41:48,986  WARN main OracleDAO:addUser:166 - ORA-00001: unique constraint (LIBRARY.READERS_PK) violated
+
+12:41:48,986  INFO main test:main:24 - Genre wasn't added.
+12:46:38,102  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+12:46:38,105  INFO main test:main:20 - [C@45fcb00e
+12:46:38,335  INFO main test:main:22 - Genre added successfully.
+13:02:35,833  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+13:02:36,024  INFO main test:main:31 - Genre added successfully.
+13:08:37,916  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+13:08:38,203  WARN main OracleDAO:deleteGenre:260 - ORA-02292: integrity constraint (LIBRARY.BOOKTYPES_FK1) violated - child record found
+
+13:08:38,205  INFO main test:main:27 - Genre wasn't added.
+13:09:15,867  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+13:09:16,076  INFO main test:main:25 - Genre added successfully.
+13:44:09,436  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+13:44:09,653  WARN main OracleDAO:updateGenre:390 - ORA-00001: unique constraint (LIBRARY.GENRES_UK1) violated
+
+13:44:09,656  INFO main test:main:27 - Genre wasn't added.
+13:45:02,726  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+13:45:02,931  INFO main test:main:25 - Genre added successfully.
+16:58:51,933  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+16:58:53,340  WARN main ConnectionPool:<init>:30 - Io exception: The Network Adapter could not establish the connection
+17:44:59,332  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
