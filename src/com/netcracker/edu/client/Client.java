@@ -1,6 +1,7 @@
 package com.netcracker.edu.client;
 
 import com.netcracker.edu.connection.Server;
+import com.netcracker.edu.util.FileLocation;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -52,7 +53,7 @@ public class Client {
         BufferedReader input = new BufferedReader(new InputStreamReader(localhost.getInputStream()));
         PrintWriter output = new PrintWriter(localhost.getOutputStream(), true);
         String[] commands = null;
-        File file = new File("C:\\Users\\FlowRyder\\IdeaProjects\\Library\\src\\com\\netcracker\\edu\\data\\scenario.txt");
+        File file = new File(FileLocation.getScenario());
         try (FileReader fileReader = new FileReader(file)) {
             char[] buffer = new char[(int) file.length()];
             fileReader.read(buffer);

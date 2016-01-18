@@ -1,17 +1,13 @@
 package com.netcracker.edu.commands;
 
-import com.netcracker.edu.businessobjects.Genre;
 import com.netcracker.edu.connection.Server;
-import com.netcracker.edu.dao.FileDAO;
-import com.netcracker.edu.persist.FileStorage;
+import com.netcracker.edu.util.FileLocation;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Scanner;
 
 
@@ -53,7 +49,7 @@ public class ExecuteConsoleCommand {
     }
 
     public static void scenario() throws SQLException {
-        File file = new File("C:\\Users\\FlowRyder\\IdeaProjects\\Library\\src\\com\\netcracker\\edu\\data\\scenario.txt");
+        File file = new File(FileLocation.getScenario());
         try (FileReader fileReader = new FileReader(file)) {
             char[] buffer = new char[(int) file.length()];
             fileReader.read(buffer);

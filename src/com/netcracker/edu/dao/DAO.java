@@ -10,41 +10,41 @@ import java.math.BigInteger;
 import java.sql.SQLException;
 
 public interface DAO {
-    boolean addAccount(Account account) throws SQLException;
+    boolean addAccount(Account account);
 
-    boolean addAuthor(Author author) throws SQLException;
+    boolean addAuthor(Author author);
 
-    boolean addBook(Book book) throws SQLException;
+    boolean addBook(Book book);
 
-    boolean addBookType(BookType bookType) throws SQLException;
+    boolean addBookType(BookType bookType);
 
-    boolean addGenre(Genre genre) throws SQLException;
+    boolean addGenre(Genre genre);
 
-    boolean addUser(User user) throws SQLException;
+    boolean addUser(User user);
 
-    boolean deleteAccount(BigInteger id) throws SQLException;
+    boolean deleteAccount(BigInteger id);
 
-    boolean deleteAuthor(BigInteger id) throws SQLException;
+    boolean deleteAuthor(BigInteger id);
 
-    boolean deleteBook(BigInteger id) throws SQLException;
+    boolean deleteBook(BigInteger id);
 
-    boolean deleteBookType(BigInteger id) throws SQLException;
+    boolean deleteBookType(BigInteger id);
 
-    boolean deleteGenre(BigInteger id) throws SQLException;
+    boolean deleteGenre(BigInteger id);
 
-    boolean deleteUser(BigInteger id) throws SQLException;
+    boolean deleteUser(BigInteger id);
 
-    boolean updateAccount(Account account) throws SQLException;
+    boolean updateAccount(Account account);
 
-    boolean updateAuthor(Author author) throws SQLException;
+    boolean updateAuthor(Author author);
 
-    boolean updateBook(Book book) throws SQLException;
+    boolean updateBook(Book book);
 
-    boolean updateBookType(BookType bookType) throws SQLException;
+    boolean updateBookType(BookType bookType);
 
-    boolean updateGenre(Genre genre) throws SQLException;
+    boolean updateGenre(Genre genre);
 
-    boolean updateUser(User user) throws SQLException;
+    boolean updateUser(User user);
 
-    User findByLogin(String login) throws SQLException;
+    User findByLogin(String login);
 }

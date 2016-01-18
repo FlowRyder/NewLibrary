@@ -1,8 +1,6 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.BookType;
-import com.netcracker.edu.dao.DAO;
-import com.netcracker.edu.dao.DAOFactory;
 import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
@@ -15,7 +13,6 @@ import java.sql.SQLException;
 public class EditBookType extends Command {
     public static final Logger LOGGER = Logger.getLogger(EditBookType.class);
     public int parametersNumber = 5;
-    public DAO dao = DAOFactory.getDAO();
 
     @Override
     public int execute(String[] parameters) throws SQLException {

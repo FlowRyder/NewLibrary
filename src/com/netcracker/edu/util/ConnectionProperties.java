@@ -16,8 +16,7 @@ public class ConnectionProperties {
     private static String DATABASE_LOGIN;
     private static char[] DATABASE_PASSWORD;
     private static int JDBC_POOL_SIZE;
-    private static String sourceFileLocation = "C:\\Users\\FlowRyder\\IdeaProjects\\" +
-            "Library\\src\\com\\netcracker\\edu\\data\\CONNECTION.dat";
+    private static String sourceFileLocation = FileLocation.getConnectionLocation();
 
 
     static {

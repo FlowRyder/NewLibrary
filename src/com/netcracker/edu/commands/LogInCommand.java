@@ -1,11 +1,11 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.User;
-import com.netcracker.edu.dao.FileDAO;
 import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 /**
@@ -16,16 +16,14 @@ public class LogInCommand extends Command {
     public int parametersNumber = 3;
 
     @Override
-    public int execute(String[] parameters) throws IOException {
+    public int execute(String[] parameters) throws IOException, SQLException {
         if (parameters.length != parametersNumber) {
             LOGGER.warn("Error: Wrong number of parameters.");
             return 3;
         }
-        //User user = FileDAO.getInstance().findByLogin(parameters[1]);
-User user=null;
+        User user = dao.findByLogin(parameters[1]);
         /*WARNING! Different warning message for wrong login/password
         is unsafe, this is temporary usage for troubleshooting.*/
-
         if (user == null) {
             LOGGER.warn("Error: There is no user with such login.");
             return 12;

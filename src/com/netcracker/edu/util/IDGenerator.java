@@ -16,8 +16,7 @@ public class IDGenerator {
     public static final Logger LOGGER = Logger.getLogger(IDGenerator.class);
     private static IDGenerator INSTANCE = null;
     private static AtomicInteger id;
-    private String sourceFileLocation = "C:\\Users\\FlowRyder\\IdeaProjects\\" +
-            "Library\\src\\com\\netcracker\\edu\\data\\ID.dat";
+    private String sourceFileLocation = FileLocation.getIDlocation();
 
     private IDGenerator() {
         BigInteger loadedID = loadID();

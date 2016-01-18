@@ -1,8 +1,6 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Account;
-import com.netcracker.edu.dao.DAO;
-import com.netcracker.edu.dao.DAOFactory;
 import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
@@ -17,10 +15,7 @@ import java.util.Calendar;
 public class AddAccount extends Command {
     public static final Logger LOGGER = Logger.getLogger(AddAccount.class);
     public int parametersNumber = 8;
-    public DAO dao = DAOFactory.getDAO();
 
-    //todo ?????? ????? ? ???? ?????????????, ?? ???? ???????? ??????? ???? ????? ??????
-    //todo ???????? ?? ?????? ????
     @Override
     public int execute(String[] parameters) throws SQLException {
         if (Context.getLoggedHolder() == null) {
@@ -33,20 +28,23 @@ public class AddAccount extends Command {
         }
         Account account;
         Calendar issueDateCalendar = Calendar.getInstance();
-        issueDateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[2]));
-        issueDateCalendar.set(Calendar.MONTH, Integer.parseInt(parameters[3]));
-        issueDateCalendar.set(Calendar.YEAR, Integer.parseInt(parameters[4]));
         Calendar returnDateCalendar = Calendar.getInstance();
-        returnDateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[5]));
-        returnDateCalendar.set(Calendar.MONTH, Integer.parseInt(parameters[6]));
-        returnDateCalendar.set(Calendar.YEAR, Integer.parseInt(parameters[7]));
         try {
+            issueDateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[2]));
+            issueDateCalendar.set(Calendar.MONTH, Integer.parseInt(parameters[3]));
+            issueDateCalendar.set(Calendar.YEAR, Integer.parseInt(parameters[4]));
+            returnDateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[5]));
+            returnDateCalendar.set(Calendar.MONTH, Integer.parseInt(parameters[6]));
+            returnDateCalendar.set(Calendar.YEAR, Integer.parseInt(parameters[7]));
             account = new Account(Context.getLoggedHolder().getId(),
                     new BigInteger(parameters[1]),
                     new Date(issueDateCalendar.getTimeInMillis()), new Date(returnDateCalendar.getTimeInMillis()));
         } catch (NullPointerException e) {
             LOGGER.warn("Error: ID shouldn't be null or negative value.");
             return 5;
+        } catch (NumberFormatException e) {
+            LOGGER.warn("Error: Date should have number format.");
+            return 17;
         }
         if (!dao.addAccount(account)) {
             LOGGER.info("Error: unsuccessfully query. Book type hasn't been added.");

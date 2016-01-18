@@ -31,16 +31,11 @@ public class EditAccount extends Command {
             return 3;
         }
         Calendar issueDateCalendar = Calendar.getInstance();
+        Calendar returnDateCalendar = Calendar.getInstance();
         try {
             issueDateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[4]));
             issueDateCalendar.set(Calendar.MONTH, Integer.parseInt(parameters[5]));
             issueDateCalendar.set(Calendar.YEAR, Integer.parseInt(parameters[6]));
-        } catch (NumberFormatException e) {
-            LOGGER.warn("Error: Date should have number format.");
-            return 17;
-        }
-        Calendar returnDateCalendar = Calendar.getInstance();
-        try {
             returnDateCalendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[7]));
             returnDateCalendar.set(Calendar.MONTH, Integer.parseInt(parameters[8]));
             returnDateCalendar.set(Calendar.YEAR, Integer.parseInt(parameters[9]));

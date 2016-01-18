@@ -2,23 +2,22 @@ package com.netcracker.edu.dao;
 
 import com.netcracker.edu.businessobjects.*;
 import com.netcracker.edu.persist.FileStorage;
+import com.netcracker.edu.util.FileLocation;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.sql.SQLException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created by FlowRyder
  */
-public class FileDAO /*implements DAO*/ {
-    /*public static final Logger LOGGER = Logger.getLogger(FileDAO.class);
+public class FileDAO implements DAO {
+    public static final Logger LOGGER = Logger.getLogger(FileDAO.class);
     private static FileDAO INSTANCE = null;
     private static FileStorage fileStorage;
-    private String sourceFileLocation = "C:\\Users\\FlowRyder\\IdeaProjects\\" +
-            "Library\\src\\com\\netcracker\\edu\\data\\FILESTORAGE.dat";
+    private String sourceFileLocation = FileLocation.getFileStorageLocation();
 
     private ReentrantReadWriteLock accountRWL = new ReentrantReadWriteLock();
     private Lock accountRL = accountRWL.readLock();
@@ -40,13 +39,9 @@ public class FileDAO /*implements DAO*/ {
     private Lock genreRL = genreRWL.readLock();
     private Lock genreWL = genreRWL.writeLock();
 
-    private ReentrantReadWriteLock readerRWL = new ReentrantReadWriteLock();
-    private Lock readerRL = readerRWL.readLock();
-    private Lock readerWL = readerRWL.writeLock();
-
-    private ReentrantReadWriteLock librarianRWL = new ReentrantReadWriteLock();
-    private Lock librarianRL = librarianRWL.readLock();
-    private Lock librarianWL = librarianRWL.writeLock();
+    private ReentrantReadWriteLock userRWL = new ReentrantReadWriteLock();
+    private Lock userRL = userRWL.readLock();
+    private Lock userWL = userRWL.writeLock();
 
     private FileDAO() {
         fileStorage = loadFileStorage();
@@ -60,412 +55,294 @@ public class FileDAO /*implements DAO*/ {
     }
 
     @Override
-    public void addAccount(Account account) {
+    public boolean addAccount(Account account) {
+        boolean result;
         accountWL.lock();
         try {
-            fileStorage.getAccounts().add(account);
+            result = fileStorage.getAccounts().add(account);
         } finally {
             accountWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void addAuthor(Author author) {
+    public boolean addAuthor(Author author) {
+        boolean result;
         authorWL.lock();
         try {
-            fileStorage.getAuthors().add(author);
+            result = fileStorage.getAuthors().add(author);
         } finally {
             authorWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void addBook(Book book) {
+    public boolean addBook(Book book) {
+        boolean result;
         bookWL.lock();
         try {
-            fileStorage.getBooks().add(book);
+            result = fileStorage.getBooks().add(book);
         } finally {
             bookWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void addBookType(BookType bookType) {
+    public boolean addBookType(BookType bookType) {
+        boolean result;
         bookTypeWL.lock();
         try {
-            fileStorage.getBookTypes().add(bookType);
+            result = fileStorage.getBookTypes().add(bookType);
         } finally {
             bookTypeWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void addGenre(Genre genre) {
+    public boolean addGenre(Genre genre) {
+        boolean result;
         genreWL.lock();
         try {
-            fileStorage.getGenres().add(genre);
+            result = fileStorage.getGenres().add(genre);
         } finally {
             genreWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void addUser(User user) throws SQLException {
-
-    }
-
-    @Override
-    public void addReader(Reader reader) {
-        readerWL.lock();
+    public boolean addUser(User user) {
+        boolean result;
+        userWL.lock();
         try {
-            fileStorage.getReaders().add(reader);
+            result = fileStorage.getUsers().add(user);
         } finally {
-            readerWL.unlock();
+            userWL.unlock();
         }
+        return result;
     }
 
-    @Override
-    public void addLibrarian(Librarian librarian) {
-        librarianWL.lock();
-        try {
-            fileStorage.getLibrarians().add(librarian);
-        } finally {
-            librarianWL.unlock();
-        }
-    }
 
     @Override
-    public Account loadAccount(BigInteger id) {
+    public boolean deleteAccount(BigInteger id) {
+        boolean result = false;
         accountRL.lock();
-        Account account = null;
         try {
-            for (Account element : fileStorage.getAccounts()) {
-                if (element.getId().equals(id)) {
-                    account = element;
+            for (Account account : fileStorage.getAccounts()) {
+                if (account.getId().equals(id)) {
+                    account.setIsActual(false);
+                    result = true;
                 }
             }
-            return account;
         } finally {
             accountRL.unlock();
         }
+        return result;
     }
 
     @Override
-    public Author loadAuthor(BigInteger id) {
+    public boolean deleteAuthor(BigInteger id) {
+        boolean result = false;
         authorRL.lock();
-        Author author = null;
         try {
-            for (Author element : fileStorage.getAuthors()) {
-                if (element.getId().equals(id)) {
-                    author = element;
+            for (Author author : fileStorage.getAuthors()) {
+                if (author.getId().equals(id)) {
+                    result = fileStorage.getAuthors().remove(author);
                 }
             }
-            return author;
         } finally {
             authorRL.unlock();
         }
+        return result;
     }
 
     @Override
-    public Book loadBook(BigInteger id) {
+    public boolean deleteBook(BigInteger id) {
+        boolean result = false;
         bookRL.lock();
-        Book book = null;
         try {
-            for (Book element : fileStorage.getBooks()) {
-                if (element.getId().equals(id)) {
-                    book = element;
+            for (Book book : fileStorage.getBooks()) {
+                if (book.getId().equals(id)) {
+                    result = fileStorage.getBooks().remove(book);
                 }
             }
-            return book;
         } finally {
             bookRL.unlock();
         }
+        return result;
     }
 
     @Override
-    public BookType loadBookType(BigInteger id) {
+    public boolean deleteBookType(BigInteger id) {
+        boolean result = false;
         bookTypeRL.lock();
-        BookType bookType = null;
         try {
-            for (BookType element : fileStorage.getBookTypes()) {
-                if (element.getId().equals(id)) {
-                    bookType = element;
+            for (BookType bookType : fileStorage.getBookTypes()) {
+                if (bookType.getId().equals(id)) {
+                    result = fileStorage.getBookTypes().remove(bookType);
                 }
             }
-            return bookType;
         } finally {
             bookTypeRL.unlock();
         }
+        return result;
     }
 
     @Override
-    public Genre loadGenre(BigInteger id) {
+    public boolean deleteGenre(BigInteger id) {
+        boolean result = false;
         genreRL.lock();
-        Genre genre = null;
         try {
-            for (Genre element : fileStorage.getGenres()) {
-                if (element.getId().equals(id)) {
-                    genre = element;
+            for (Genre genre : fileStorage.getGenres()) {
+                if (genre.getId().equals(id)) {
+                    result = fileStorage.getGenres().remove(genre);
                 }
             }
-            return genre;
         } finally {
             genreRL.unlock();
         }
+        return result;
     }
 
     @Override
-    public Reader loadReader(BigInteger id) {
-        readerRL.lock();
-        Reader reader = null;
+    public boolean deleteUser(BigInteger id) {
+        boolean result = false;
+        userRL.lock();
         try {
-            for (Reader element : fileStorage.getReaders()) {
-                if (element.getId().equals(id)) {
-                    reader = element;
+            for (User user : fileStorage.getUsers()) {
+                if (user.getId().equals(id)) {
+                    result = fileStorage.getUsers().remove(user);
                 }
             }
-            return reader;
         } finally {
-            readerRL.unlock();
-        }
-    }
-
-    @Override
-    public Librarian loadLibrarian(BigInteger id) {
-        librarianRL.lock();
-        Librarian librarian = null;
-        try {
-            for (Librarian element : fileStorage.getLibrarians()) {
-                if (element.getId().equals(id)) {
-                    librarian = element;
-                }
-            }
-            return librarian;
-        } finally {
-            librarianRL.unlock();
-        }
-    }
-
-    @Override
-    public boolean deleteAccount(Account account) {
-        boolean result;
-        accountWL.lock();
-        try {
-            result = fileStorage.getAccounts().remove(account);
-        } finally {
-            accountWL.unlock();
+            userRL.unlock();
         }
         return result;
     }
 
     @Override
-    public boolean deleteAuthor(Author author) {
-        boolean result;
-        authorWL.lock();
-        try {
-            result = fileStorage.getAuthors().remove(author);
-        } finally {
-            authorWL.unlock();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean deleteBook(Book book) {
-        boolean result;
-        bookWL.lock();
-        try {
-            result = fileStorage.getBooks().remove(book);
-        } finally {
-            bookWL.unlock();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean deleteBookType(BookType bookType) {
-        boolean result;
-        bookTypeWL.lock();
-        try {
-            result = fileStorage.getBookTypes().remove(bookType);
-        } finally {
-            bookTypeWL.unlock();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean deleteGenre(Genre genre) {
-        boolean result;
-        genreWL.lock();
-        try {
-            result = fileStorage.getGenres().remove(genre);
-        } finally {
-            genreWL.unlock();
-        }
-        return result;
-    }
-
-    @Override
-    public void deleteUser(User user) throws SQLException {
-
-    }
-
-    @Override
-    public boolean deleteReader(Reader reader) {
-        boolean result;
-        readerWL.lock();
-        try {
-            result = fileStorage.getReaders().remove(reader);
-        } finally {
-            readerWL.unlock();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean deleteLibrarian(Librarian librarian) {
-        boolean result;
-        librarianWL.lock();
-        try {
-            result = fileStorage.getLibrarians().remove(librarian);
-        } finally {
-            librarianWL.unlock();
-        }
-        return result;
-    }
-
-    @Override
-    public void updateAccount(Account account) {
+    public boolean updateAccount(Account account) {
+        boolean result = false;
         accountWL.lock();
         try {
             for (Account element : fileStorage.getAccounts()) {
                 if (element.getId().equals(account.getId())) {
                     fileStorage.getAccounts().remove(element);
                     fileStorage.getAccounts().add(account);
+                    result = true;
                 }
             }
         } finally {
             accountWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void updateAuthor(Author author) {
+    public boolean updateAuthor(Author author) {
+        boolean result = false;
         authorWL.lock();
         try {
             for (Author element : fileStorage.getAuthors()) {
                 if (element.getId().equals(author.getId())) {
                     fileStorage.getAuthors().remove(element);
                     fileStorage.getAuthors().add(author);
+                    result = true;
                 }
             }
         } finally {
             authorWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void updateBook(Book book) {
+    public boolean updateBook(Book book) {
+        boolean result = false;
         bookWL.lock();
         try {
             for (Book element : fileStorage.getBooks()) {
                 if (element.getId().equals(book.getId())) {
                     fileStorage.getBooks().remove(element);
                     fileStorage.getBooks().add(book);
+                    result = true;
                 }
             }
         } finally {
             bookWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void updateBookType(BookType bookType) {
+    public boolean updateBookType(BookType bookType) {
+        boolean result = false;
         bookTypeWL.lock();
         try {
             for (BookType element : fileStorage.getBookTypes()) {
                 if (element.getId().equals(bookType.getId())) {
                     fileStorage.getBookTypes().remove(element);
                     fileStorage.getBookTypes().add(bookType);
+                    result = true;
                 }
             }
         } finally {
             bookTypeWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void updateGenre(Genre genre) {
+    public boolean updateGenre(Genre genre) {
+        boolean result = false;
         genreWL.lock();
         try {
             for (Genre element : fileStorage.getGenres()) {
                 if (element.getId().equals(genre.getId())) {
                     fileStorage.getGenres().remove(element);
                     fileStorage.getGenres().add(genre);
+                    result = true;
                 }
             }
         } finally {
             genreWL.unlock();
         }
+        return result;
     }
 
     @Override
-    public void updateUser(User user) throws SQLException {
-
-    }
-
-    @Override
-    public void updateReader(Reader reader) {
-        readerWL.lock();
+    public boolean updateUser(User user) {
+        boolean result = false;
+        userWL.lock();
         try {
-            for (Reader element : fileStorage.getReaders()) {
-                if (element.getId().equals(reader.getId())) {
-                    fileStorage.getReaders().remove(element);
-                    fileStorage.getReaders().add(reader);
+            for (User element : fileStorage.getUsers()) {
+                if (element.getId().equals(user.getId())) {
+                    fileStorage.getUsers().remove(element);
+                    fileStorage.getUsers().add(user);
+                    result = true;
                 }
             }
         } finally {
-            readerWL.unlock();
+            userWL.unlock();
         }
-    }
-
-    @Override
-    public void updateLibrarian(Librarian librarian) {
-        librarianWL.lock();
-        try {
-            for (Librarian element : fileStorage.getLibrarians()) {
-                if (element.getId().equals(librarian.getId())) {
-                    fileStorage.getLibrarians().remove(element);
-                    fileStorage.getLibrarians().add(librarian);
-                }
-            }
-        } finally {
-            accountWL.unlock();
-        }
+        return result;
     }
 
     @Override
     public User findByLogin(String login) {
-        librarianRL.lock();
+        userRL.lock();
         try {
-            for (Librarian librarian : fileStorage.getLibrarians()) {
-                if (librarian.getLogin().equals(login)) {
-                    return librarian;
+            for (User user : fileStorage.getUsers()) {
+                if (user.getLogin().equals(login)) {
+                    return user;
                 }
             }
         } finally {
-            librarianRL.unlock();
-        }
-        readerRL.lock();
-        try {
-            for (Reader reader : fileStorage.getReaders()) {
-                if (reader.getLogin().equals(login)) {
-                    return reader;
-                }
-            }
-        } finally {
-            readerRL.unlock();
+            userRL.unlock();
         }
         return null;
     }
@@ -498,35 +375,4 @@ public class FileDAO /*implements DAO*/ {
         LOGGER.info("FileStorage successfully has been saved to file.");
     }
 
-    // temporary method for choose ID by user.
-    public void show() {
-        LOGGER.info("Readers");
-        for (Reader reader : fileStorage.getReaders()) {
-            LOGGER.info(reader.toString());
-        }
-        LOGGER.info("Librarians");
-        for (Librarian librarian : fileStorage.getLibrarians()) {
-            LOGGER.info(librarian.toString());
-        }
-        LOGGER.info("Genres");
-        for (Genre genre : fileStorage.getGenres()) {
-            LOGGER.info(genre.toString());
-        }
-        LOGGER.info("Authors");
-        for (Author author : fileStorage.getAuthors()) {
-            LOGGER.info(author.toString());
-        }
-        LOGGER.info("Books");
-        for (Book book : fileStorage.getBooks()) {
-            LOGGER.info(book.toString());
-        }
-        LOGGER.info("BookTypes");
-        for (BookType bookType : fileStorage.getBookTypes()) {
-            LOGGER.info(bookType.toString());
-        }
-        LOGGER.info("Accounts");
-        for (Account account : fileStorage.getAccounts()) {
-            LOGGER.info(account.toString());
-        }
-    }*/
 }

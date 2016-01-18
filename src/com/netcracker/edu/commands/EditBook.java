@@ -15,7 +15,6 @@ import java.sql.SQLException;
 public class EditBook extends Command {
     public static final Logger LOGGER = Logger.getLogger(EditBook.class);
     public int parametersNumber = 3;
-    public DAO dao = DAOFactory.getDAO();
 
     @Override
     public int execute(String[] parameters) throws SQLException {

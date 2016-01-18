@@ -2,7 +2,6 @@ package com.netcracker.edu.commands;
 
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -12,11 +11,11 @@ public class HelpCommand extends Command {
     public static final Logger LOGGER = Logger.getLogger(HelpCommand.class);
 
     @Override
-    public int execute(String[] parameters) throws IOException {
-       /* Collection<Command> helpCollection = CommandEngine.getInstance().getCommandMap().values();
+    public int execute(String[] parameters) {
+        Collection<Command> helpCollection = CommandEngine.getInstance().getCommandMap().values();
         for (Command command : helpCollection) {
             LOGGER.info(command.getHelp());
-        }*/
+        }
         return 0;
     }
 

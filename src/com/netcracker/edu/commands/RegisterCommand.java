@@ -19,8 +19,6 @@ public class RegisterCommand extends Command {
     Pattern loginPatter = Pattern.compile("^(?=.{3,24})[a-z][a-z0-9]*[._-]?[a-z0-9]+$");
     Pattern emailPattern = Pattern.compile("^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$");
     Pattern passwordPattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$");
-    public DAO dao = DAOFactory.getDAO();
-    //todo ????????? ?? ????? ????? ??????????? ? LoggedUser?
     @Override
     public int execute(String[] parameters) throws IOException, SQLException {
         if (parameters.length != parametersNumber) {
