@@ -1,15 +1,12 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.Account;
-import com.netcracker.edu.dao.DAO;
-import com.netcracker.edu.dao.DAOFactory;
-import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
+import static com.netcracker.edu.util.ExceptionCode.*;
+
 import java.math.BigInteger;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.Calendar;
 
 /**
@@ -17,19 +14,11 @@ import java.util.Calendar;
  */
 public class EditAccount extends Command {
     public static final Logger LOGGER = Logger.getLogger(EditAccount.class);
-    public int parametersNumber = 10;
-    public DAO dao = DAOFactory.getDAO();
+    public final int parametersNumber = 10;
 
     @Override
-    public int execute(String[] parameters) throws IOException, SQLException {
-        if (Context.getLoggedHolder() == null) {
-            LOGGER.warn("Error: User isn't logged in.");
-            return 1;
-        }
-        if (parameters.length != parametersNumber) {
-            LOGGER.warn("Error: Wrong number of parameters.");
-            return 3;
-        }
+    public int execute(String[] parameters) {
+        int result = checkReader(parameters);
         Calendar issueDateCalendar = Calendar.getInstance();
         Calendar returnDateCalendar = Calendar.getInstance();
         try {
@@ -41,7 +30,7 @@ public class EditAccount extends Command {
             returnDateCalendar.set(Calendar.YEAR, Integer.parseInt(parameters[9]));
         } catch (NumberFormatException e) {
             LOGGER.warn("Error: Date should have number format.");
-            return 17;
+            return invalidDateFormat;
         }
         Account account;
         try {
@@ -51,14 +40,16 @@ public class EditAccount extends Command {
             account.setId(new BigInteger(parameters[1]));
         } catch (NumberFormatException e) {
             LOGGER.warn("Error: ID should be number.");
-            return 6;
+            return IDNotANumber;
         }
-        if (!dao.updateAccount(account)) {
+        if (!DAO.updateAccount(account)) {
             LOGGER.info("Error: unsuccessfully query. Account hasn't been updated.");
-            return 18;
+            return unsuccessfullQuery;
         }
-        LOGGER.info("Account successfully edited.");
-        return 0;
+        if (result == success) {
+            LOGGER.info("Account successfully edited.");
+        }
+        return result;
     }
 
     @Override

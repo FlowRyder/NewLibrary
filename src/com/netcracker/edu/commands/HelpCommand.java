@@ -1,7 +1,7 @@
 package com.netcracker.edu.commands;
 
 import org.apache.log4j.Logger;
-
+import static com.netcracker.edu.util.ExceptionCode.*;
 import java.util.Collection;
 
 /**
@@ -16,7 +16,7 @@ public class HelpCommand extends Command {
         for (Command command : helpCollection) {
             LOGGER.info(command.getHelp());
         }
-        return 0;
+        return success;
     }
 
     @Override

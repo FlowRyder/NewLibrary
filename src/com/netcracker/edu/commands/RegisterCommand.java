@@ -1,67 +1,66 @@
 package com.netcracker.edu.commands;
 
 import com.netcracker.edu.businessobjects.User;
-import com.netcracker.edu.dao.DAO;
-import com.netcracker.edu.dao.DAOFactory;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.netcracker.edu.util.ExceptionCode.*;
 
 /**
  * Created by FlowRyder
  */
 public class RegisterCommand extends Command {
     public static final Logger LOGGER = Logger.getLogger(RegisterCommand.class);
-    public int parametersNumber = 6;
-    Pattern loginPatter = Pattern.compile("^(?=.{3,24})[a-z][a-z0-9]*[._-]?[a-z0-9]+$");
+    public final int parametersNumber = 6;
+    Pattern loginPattern = Pattern.compile("^(?=.{3,24})[a-z][a-z0-9]*[._-]?[a-z0-9]+$");
     Pattern emailPattern = Pattern.compile("^[-\\w.]+@([A-z0-9][-A-z0-9]+\\.)+[A-z]{2,4}$");
     Pattern passwordPattern = Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$");
+
     @Override
-    public int execute(String[] parameters) throws IOException, SQLException {
+    public int execute(String[] parameters)  {
         if (parameters.length != parametersNumber) {
             LOGGER.warn("Error: Wrong number of parameters.");
-            return 3;
+            return wrongParametersNumber;
         }
 
-        Matcher loginMatcher = loginPatter.matcher(parameters[2]);
+        Matcher loginMatcher = loginPattern.matcher(parameters[2]);
         if (!loginMatcher.matches()) {
             LOGGER.warn("Error: Invalid format of login.");
-            return 7;
+            return invalidLogin;
         }
 
         Matcher emailMatcher = emailPattern.matcher(parameters[3]);
         if (!emailMatcher.matches()) {
             LOGGER.warn("Error: Invalid format of email.");
-            return 8;
+            return invalidEmail;
         }
 
         Matcher passwordMatcher = passwordPattern.matcher(parameters[4]);
         if (!passwordMatcher.matches()) {
             LOGGER.warn("Error: Invalid format of password.");
-            return 9;
+            return invalidPassword;
         }
         User user;
         try {
             user = new User(parameters[1], parameters[2], parameters[3], parameters[4].toCharArray());
         } catch (IllegalArgumentException e) {
             LOGGER.warn("Error: Name shouldn't be null or void.");
-            return 4;
+            return invalidNameValue;
         }
         if (parameters[5].equals("librarian")) {
             user.setRights(true);
         } else {
             LOGGER.warn("Error: Role should be reader or librarian.");
-            return 10;
+            return invalidRole;
         }
-        if (!dao.addUser(user)) {
+        if (!DAO.addUser(user)) {
             LOGGER.info("Error: unsuccessfully query. User hasn't been registered.");
-            return 18;
+            return unsuccessfullQuery;
         }
         LOGGER.info("User successfully registered.");
-        return 0;
+        return success;
     }
 
     @Override

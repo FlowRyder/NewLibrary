@@ -1,45 +1,34 @@
 package com.netcracker.edu.commands;
 
-import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
+import static com.netcracker.edu.util.ExceptionCode.*;
+
 import java.math.BigInteger;
-import java.sql.SQLException;
 
 /**
  * Created by FlowRyder
  */
 public class DeleteBookType extends Command {
     public static final Logger LOGGER = Logger.getLogger(DeleteBookType.class);
-    public int parametersNumber = 2;
+    public final int parametersNumber = 2;
 
     @Override
-    public int execute(String[] parameters) throws SQLException {
-        if (Context.getLoggedHolder() == null) {
-            LOGGER.warn("Error: User isn't logged in.");
-            return 1;
-        }
-        if (!Context.getLoggedHolder().getRights()) {
-            LOGGER.warn("Error: Access only for librarians.");
-            return 2;
-        }
-        if (parameters.length != parametersNumber) {
-            LOGGER.warn("Error: Wrong number of parameters.");
-            return 3;
-        }
-        boolean result;
+    public int execute(String[] parameters) {
+        int result = checkLibrarian(parameters);
         try {
-            result = dao.deleteBookType(new BigInteger(parameters[1]));
+            if (!DAO.deleteBookType(new BigInteger(parameters[1]))) {
+                LOGGER.warn("Error: Unsuccessful delete.");
+                return unsuccessfullDelete;
+            }
         } catch (NumberFormatException e) {
             LOGGER.warn("Error: ID should be number.");
-            return 6;
+            return IDNotANumber;
         }
-        if (!result) {
-            LOGGER.warn("Error: Unsuccessful delete.");
-            return 15;
+        if (result == success) {
+            LOGGER.info("Book type successfully deleted.");
         }
-        LOGGER.info("Book type successfully deleted.");
-        return 0;
+        return result;
     }
 
     @Override

@@ -7,7 +7,6 @@ package com.netcracker.edu.dao;
 import com.netcracker.edu.businessobjects.*;
 
 import java.math.BigInteger;
-import java.sql.SQLException;
 
 public interface DAO {
     boolean addAccount(Account account);

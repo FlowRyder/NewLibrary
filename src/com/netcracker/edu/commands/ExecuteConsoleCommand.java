@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 
@@ -17,7 +16,7 @@ import java.util.Scanner;
 public class ExecuteConsoleCommand {
     public static final Logger LOGGER = Logger.getLogger(ExecuteConsoleCommand.class);
 
-    public static void main(String[] args) throws IOException, SQLException {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         LOGGER.info("To use console app enter console");
         LOGGER.info("To use scenario enter scenario");
@@ -32,10 +31,14 @@ public class ExecuteConsoleCommand {
                 break;
             case "server":
                 server();
+                break;
+            default:
+                LOGGER.info("Invalid command.");
+                break;
         }
     }
 
-    public static void console() throws IOException, SQLException {
+    public static void console() {
         while (true) {
             Scanner scanner = new Scanner(System.in);
             LOGGER.info("Enter command:");
@@ -48,7 +51,7 @@ public class ExecuteConsoleCommand {
         }
     }
 
-    public static void scenario() throws SQLException {
+    public static void scenario() {
         File file = new File(FileLocation.getScenario());
         try (FileReader fileReader = new FileReader(file)) {
             char[] buffer = new char[(int) file.length()];
@@ -70,7 +73,7 @@ public class ExecuteConsoleCommand {
         }
     }
 
-    public static void server() throws IOException {
+    public static void server() {
         Server.execute();
     }
 }

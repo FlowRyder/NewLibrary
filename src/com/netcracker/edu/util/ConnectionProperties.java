@@ -11,12 +11,12 @@ import java.io.IOException;
  */
 public class ConnectionProperties {
     public static final Logger LOGGER = Logger.getLogger(ConnectionProperties.class);
-    private static String DBURL;
-    private static String DAO;
-    private static String DATABASE_LOGIN;
-    private static char[] DATABASE_PASSWORD;
-    private static int JDBC_POOL_SIZE;
-    private static String sourceFileLocation = FileLocation.getConnectionLocation();
+    private static final String DBURL;
+    private static final String DAO;
+    private static final String DATABASE_LOGIN;
+    private static final char[] DATABASE_PASSWORD;
+    private static final int JDBC_POOL_SIZE;
+    private static final String sourceFileLocation = FileLocation.getConnectionLocation();
 
 
     static {

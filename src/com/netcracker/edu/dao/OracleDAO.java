@@ -15,6 +15,7 @@ import java.util.Locale;
 /**
  * Created by FlowRyder.
  */
+@SuppressWarnings("all")
 public class OracleDAO implements DAO {
     public static final Logger LOGGER = Logger.getLogger(OracleDAO.class);
     private static OracleDAO INSTANCE = new OracleDAO();

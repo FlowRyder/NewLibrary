@@ -12,10 +12,22 @@ import java.net.Socket;
 public class Server {
     public static final Logger LOGGER = Logger.getLogger(Server.class);
 
-    public static void execute() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(4444);
+    public static void execute() {
+        ServerSocket serverSocket;
+        try {
+            serverSocket = new ServerSocket(4444);
+        } catch (IOException e) {
+            LOGGER.warn(e.getMessage());
+            return;
+        }
         while (true) {
-            Socket socket = serverSocket.accept();
+            Socket socket;
+            try {
+                socket = serverSocket.accept();
+            } catch (IOException e) {
+                LOGGER.warn(e.getMessage());
+                return;
+            }
             new Thread(new ServerThread(socket)).start();
         }
 

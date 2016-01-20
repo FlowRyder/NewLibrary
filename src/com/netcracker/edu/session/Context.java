@@ -3,7 +3,6 @@ package com.netcracker.edu.session;
 import com.netcracker.edu.businessobjects.User;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +28,7 @@ public class Context {
         return activeUsers;
     }
 
-    public synchronized static void setLoggedUser(User user) throws IOException {
+    public synchronized static void setLoggedUser(User user) throws AccessDeniedException {
         if (user == null) {
             throw new NullPointerException("Error: User shouldn't be null.");
         } else {

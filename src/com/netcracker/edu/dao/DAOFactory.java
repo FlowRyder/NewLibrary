@@ -16,7 +16,7 @@ public class DAOFactory {
                 DAO_INSTANCE = OracleDAO.getInstance();
                 break;
             case "FileDAO":
-                DAO_INSTANCE = null;//FileDAO.getInstance();
+                DAO_INSTANCE = FileDAO.getInstance();
                 break;
             default:
                 DAO_INSTANCE = null;

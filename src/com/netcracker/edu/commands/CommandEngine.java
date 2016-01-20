@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public final class CommandEngine {
     private static CommandEngine INSTANCE = null;
-    private Map<String, Command> commandMap;
+    private final Map<String, Command> commandMap;
 
     private CommandEngine() {
         commandMap = new HashMap<>();

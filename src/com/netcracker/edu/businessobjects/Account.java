@@ -2,7 +2,6 @@ package com.netcracker.edu.businessobjects;
 
 import java.math.BigInteger;
 import java.sql.Date;
-import java.util.Calendar;
 
 /**
  * Created by FlowRyder.

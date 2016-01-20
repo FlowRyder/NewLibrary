@@ -68,3 +68,22 @@
 16:58:51,933  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
 16:58:53,340  WARN main ConnectionPool:<init>:30 - Io exception: The Network Adapter could not establish the connection
 17:44:59,332  INFO main IDGenerator:loadID:51 - ID successfully has been loaded from file.
+19:31:56,257  INFO main ExecuteConsoleCommand:main:22 - To use console app enter console
+19:31:56,281  INFO main ExecuteConsoleCommand:main:23 - To use scenario enter scenario
+19:31:56,282  INFO main ExecuteConsoleCommand:main:24 - To use server enter server
+19:32:09,015  INFO main ExecuteConsoleCommand:console:41 - Enter command:
+19:32:19,984  WARN main AddGenre:execute:19 - Error: User isn't logged in.
+19:32:19,985  INFO main ExecuteConsoleCommand:console:41 - Enter command:
+19:32:29,733  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+19:32:29,735  INFO main IDGenerator:saveID:60 - ID successfully has been saved to file.
+19:56:56,051  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+10:48:16,171  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+10:48:48,042  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+10:52:43,903  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+12:14:53,565  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+12:26:04,844  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+12:49:30,184  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+13:28:43,146  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+13:33:49,745  WARN main AddGenre:execute:17 - Error: User isn't logged in.
+13:38:48,318  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
+13:38:48,323  WARN main AddGenre:execute:21 - Error: Access only for librarians.
