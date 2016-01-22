@@ -87,3 +87,8 @@
 13:33:49,745  WARN main AddGenre:execute:17 - Error: User isn't logged in.
 13:38:48,318  INFO main IDGenerator:loadID:50 - ID successfully has been loaded from file.
 13:38:48,323  WARN main AddGenre:execute:21 - Error: Access only for librarians.
+16:23:25,640  INFO main ExecuteConsoleCommand:main:21 - To use console app enter console
+16:23:25,649  INFO main ExecuteConsoleCommand:main:22 - To use scenario enter scenario
+16:23:25,650  INFO main ExecuteConsoleCommand:main:23 - To use server enter server
+16:25:17,516  INFO Thread-0 Server:run:28 - Enter command:
+16:25:35,048  INFO Thread-1 Server:run:28 - Enter command:

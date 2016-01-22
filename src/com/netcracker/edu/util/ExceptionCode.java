@@ -20,6 +20,7 @@ public class ExceptionCode {
     public static final int noSuchPassword = 13;
     public static final int notLoggedInToLogOut = 14;
     public static final int unsuccessfullDelete = 15;
+    public static final int unsuccessfullLoad = 16;
     public static final int invalidDateFormat = 17;
     public static final int unsuccessfullQuery = 18;
 }

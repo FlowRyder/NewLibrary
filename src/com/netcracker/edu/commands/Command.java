@@ -12,9 +12,7 @@ import org.apache.log4j.Logger;
 public abstract class Command {
     public static final Logger LOGGER = Logger.getLogger(AddGenre.class);
     public static final DAO DAO = DAOFactory.getDAO();
-    public final int parametersNumber = 1;
-
-    public int checkLibrarian(String[] parameters) {
+    public int checkLibrarian(String[] parameters, int parametersNumber) {
         if (Context.getLoggedHolder() == null) {
             LOGGER.warn("Error: User isn't logged in.");
             return ExceptionCode.notLoggedIn;
@@ -30,7 +28,7 @@ public abstract class Command {
         return ExceptionCode.success;
     }
 
-    public int checkReader(String[] parameters) {
+    public int checkReader(String[] parameters, int parametersNumber) {
         if (Context.getLoggedHolder() == null) {
             LOGGER.warn("Error: User isn't logged in.");
             return ExceptionCode.notLoggedIn;

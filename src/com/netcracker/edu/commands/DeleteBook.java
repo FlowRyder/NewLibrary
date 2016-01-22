@@ -15,7 +15,7 @@ public class DeleteBook extends Command {
 
     @Override
     public int execute(String[] parameters) {
-        int result = checkLibrarian(parameters);
+        int result = checkLibrarian(parameters, parametersNumber);
         try {
             if (!DAO.deleteBook(new BigInteger(parameters[1]))) {
                 LOGGER.warn("Error: Unsuccessful delete.");

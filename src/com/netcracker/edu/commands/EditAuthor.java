@@ -16,7 +16,7 @@ public class EditAuthor extends Command {
 
     @Override
     public int execute(String[] parameters) {
-        int result = checkLibrarian(parameters);
+        int result = checkLibrarian(parameters, parametersNumber);
         Author author;
         try {
             author = new Author(parameters[2]);

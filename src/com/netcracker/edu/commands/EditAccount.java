@@ -18,7 +18,7 @@ public class EditAccount extends Command {
 
     @Override
     public int execute(String[] parameters) {
-        int result = checkReader(parameters);
+        int result = checkReader(parameters, parametersNumber);
         Calendar issueDateCalendar = Calendar.getInstance();
         Calendar returnDateCalendar = Calendar.getInstance();
         try {

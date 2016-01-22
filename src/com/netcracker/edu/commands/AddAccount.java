@@ -18,7 +18,7 @@ public class AddAccount extends Command {
 
     @Override
     public int execute(String[] parameters) {
-        int result = checkReader(parameters);
+        int result = checkReader(parameters, parametersNumber);
         Account account;
         Calendar issueDate = Calendar.getInstance();
         Calendar returnDate = Calendar.getInstance();

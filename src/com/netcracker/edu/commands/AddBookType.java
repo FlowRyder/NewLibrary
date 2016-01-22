@@ -15,7 +15,7 @@ public class AddBookType extends Command {
 
     @Override
     public int execute(String[] parameters) {
-        int result = checkLibrarian(parameters);
+        int result = checkLibrarian(parameters, parametersNumber);
         BookType bookType;
         try {
             bookType = new BookType(parameters[1], new BigInteger(parameters[2]),

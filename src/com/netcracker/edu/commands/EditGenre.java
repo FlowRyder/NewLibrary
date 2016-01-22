@@ -16,7 +16,7 @@ public class EditGenre extends Command {
 
     @Override
     public int execute(String[] parameters) {
-        int result = checkLibrarian(parameters);
+        int result = checkLibrarian(parameters, parametersNumber);
         Genre genre;
         try {
             genre = new Genre(parameters[2]);
