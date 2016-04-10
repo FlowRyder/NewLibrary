@@ -41,6 +41,6 @@ public class NamedObject extends IDObject {
 
     @Override
     public String toString() {
-        return getName() + " [" + getId() + "]";
+        return getName() + " " + getId();
     }
 }

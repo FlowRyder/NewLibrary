@@ -46,4 +46,8 @@ public interface DAO {
     boolean updateUser(User user);
 
     User findByLogin(String login);
+
+    String findByAuthor(String authorName);
+
+    String findByGenre(String genreName);
 }

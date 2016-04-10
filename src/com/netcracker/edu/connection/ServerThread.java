@@ -1,6 +1,9 @@
 package com.netcracker.edu.connection;
 
+import com.netcracker.edu.cache.Cache;
 import com.netcracker.edu.commands.CommandEngine;
+import com.netcracker.edu.commands.Wrapper;
+import com.netcracker.edu.session.Context;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -29,10 +32,16 @@ public class ServerThread implements Runnable {
             while ((inputSource = input.readLine()) != null) {
                 try {
                     String[] parameters = inputSource.split(" ");
+                    LOGGER.info("Such parameters:");
+                    for(String string : parameters) {
+                        LOGGER.info(string);
+                    }
                     int result = CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
-                    output.println(result);
+                    LOGGER.info("Such result: " + Wrapper.getInstance().getResult());
+                    output.println(Wrapper.getInstance().getResult());
                 } catch (Exception e) {
-                    LOGGER.error(e.getMessage());
+                    LOGGER.error(e.getClass());
+                    e.printStackTrace();
                 }
             }
             socket.close();

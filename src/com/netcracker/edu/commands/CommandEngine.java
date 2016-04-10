@@ -32,6 +32,12 @@ public final class CommandEngine {
         commandMap.put("log_in", new LogInCommand());
         commandMap.put("log_out", new LogOutCommand());
         commandMap.put("register", new RegisterCommand());
+        commandMap.put("load_genres",new LoadGenresCommand());
+        commandMap.put("load_authors",new LoadAuthorsCommand());
+        commandMap.put("load_booktypes", new LoadBookTypesCommand());
+        commandMap.put("find_by_login", new FindByLogin());
+        commandMap.put("find_by_author", new FindByAuthor());
+        commandMap.put("find_by_genre", new FindByGenre());
     }
 
     public static CommandEngine getInstance() {

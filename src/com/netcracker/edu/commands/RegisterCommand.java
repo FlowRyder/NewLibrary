@@ -51,6 +51,8 @@ public class RegisterCommand extends Command {
         }
         if (parameters[5].equals("librarian")) {
             user.setRights(true);
+        } else if(parameters[5].equals("reader")) {
+            user.setRights(false);
         } else {
             LOGGER.warn("Error: Role should be reader or librarian.");
             return invalidRole;

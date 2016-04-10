@@ -17,11 +17,11 @@ public class JDBCHandler {
             preparedStatement.executeUpdate();
         } catch(SQLException e) {
             result = false;
-            LOGGER.warn("");
+            LOGGER.warn(e.getMessage());
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                LOGGER.warn("");
+                LOGGER.warn(e.getMessage());
             }
         } finally {
             ConnectionPool.releaseConnection(connection);

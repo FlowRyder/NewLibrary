@@ -44,6 +44,7 @@ public class ExecuteConsoleCommand {
             LOGGER.info("Enter command:");
             String value = scanner.nextLine();
             String[] parameters = value.split(" ");
+            System.out.println(parameters[0]);
             CommandEngine.getInstance().getCommandMap().get(parameters[0]).execute(parameters);
             if (parameters[0].equals("exit")) {
                 System.exit(0);

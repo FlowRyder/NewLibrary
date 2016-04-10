@@ -27,10 +27,12 @@ public class LogInCommand extends Command {
         is unsafe, this is temporary usage for troubleshooting.*/
         if (user == null) {
             LOGGER.warn("Error: There is no user with such login.");
+            Wrapper.getInstance().setResult("2");
             return noSuchLogin;
         }
         if (!Arrays.equals(user.getPassword(), parameters[2].toCharArray())) {
             LOGGER.warn("Error: Wrong password.");
+            Wrapper.getInstance().setResult("2");
             return noSuchPassword;
         }
         try {
@@ -38,6 +40,11 @@ public class LogInCommand extends Command {
         } catch (AccessDeniedException e) {
             LOGGER.warn("Error: User already logged in.");
             return alreadyLoggedIn;
+        }
+        if(Context.getLoggedHolder().getRights()) {
+            Wrapper.getInstance().setResult("1");
+        } else {
+            Wrapper.getInstance().setResult("0");
         }
         LOGGER.info("User successfully logged in.");
         return success;

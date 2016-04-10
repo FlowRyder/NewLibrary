@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
 
 /**
@@ -404,6 +406,7 @@ public class OracleDAO implements DAO {
                     connection.prepareStatement("SELECT NAME, LOGIN, EMAIL, PASSWORD, ID, RIGHTS " +
                             "FROM USERS WHERE LOGIN = ?");
             preparedStatement.setString(1, login);
+            preparedStatement.executeQuery();
             resultSet = preparedStatement.getResultSet();
             if (resultSet.next()) {
                 User user = new User(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
@@ -428,5 +431,145 @@ public class OracleDAO implements DAO {
             }
         }
         return null;
+    }
+
+    @Override
+    public String findByAuthor(String authorName) {
+        if (authorName == null) {
+            throw new IllegalArgumentException("Error: Author name shouldn't be null");
+        }
+        ResultSet resultSet = null;
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement =
+                    connection.prepareStatement("SELECT ID " +
+                            "FROM AUTHORS WHERE NAME = ?");
+            preparedStatement.setString(1, authorName);
+            preparedStatement.executeQuery();
+            resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()) {
+                BigInteger authorID = new BigInteger(resultSet.getString(1));
+                return authorID.toString();
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        } finally {
+            ConnectionPool.releaseConnection(connection);
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    LOGGER.warn(e.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String findByGenre(String genreName) {
+        if (genreName == null) {
+            throw new IllegalArgumentException("Error: Genre name shouldn't be null");
+        }
+        ResultSet resultSet = null;
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement =
+                    connection.prepareStatement("SELECT ID " +
+                            "FROM GENRES WHERE NAME = ?");
+            preparedStatement.setString(1, genreName);
+            preparedStatement.executeQuery();
+            resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()) {
+                BigInteger genreID = new BigInteger(resultSet.getString(1));
+                return genreID.toString();
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        } finally {
+            ConnectionPool.releaseConnection(connection);
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    LOGGER.warn(e.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+
+    public Collection<Genre> loadGenres() {
+        HashSet<Genre> genres = new HashSet<>();
+        ResultSet resultSet = null;
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement;
+
+        try {
+            preparedStatement =
+                    connection.prepareStatement("SELECT NAME, ID " +
+                            "FROM GENRES");
+            preparedStatement.executeQuery();
+            resultSet = preparedStatement.getResultSet();
+            while (resultSet.next()) {
+                Genre genre = new Genre(resultSet.getString(1));
+                genre.setId(BigInteger.valueOf(resultSet.getInt(2)));
+                genres.add(genre);
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.getMessage());
+        }
+        return genres;
+    }
+
+    public Collection<Author> loadAuthors() {
+        HashSet<Author> authors = new HashSet<>();
+        ResultSet resultSet = null;
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement;
+
+        try {
+            preparedStatement =
+                    connection.prepareStatement("SELECT NAME, ID " +
+                            "FROM AUTHORS");
+            preparedStatement.executeQuery();
+            resultSet = preparedStatement.getResultSet();
+            while (resultSet.next()) {
+                Author author = new Author(resultSet.getString(1));
+                author.setId(BigInteger.valueOf(resultSet.getInt(2)));
+                authors.add(author);
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.getMessage());
+        }
+        return authors;
+    }
+
+    public Collection<BookType> loadBookTypes() {
+        HashSet<BookType> booktypes = new HashSet<>();
+        ResultSet resultSet = null;
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement;
+
+        try {
+            preparedStatement =
+                    connection.prepareStatement("SELECT NAME, ID, GENRE_ID, AUTHOR_ID " +
+                            "FROM GENRES");
+            preparedStatement.executeQuery();
+            resultSet = preparedStatement.getResultSet();
+            while (resultSet.next()) {
+                BookType booktype = new BookType(resultSet.getString(1),
+                        BigInteger.valueOf(resultSet.getInt(3)), BigInteger.valueOf(resultSet.getInt(4)));
+                booktype.setId(BigInteger.valueOf(resultSet.getInt(2)));
+                booktypes.add(booktype);
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.getMessage());
+        }
+        return booktypes;
     }
 }
