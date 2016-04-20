@@ -50,4 +50,6 @@ public interface DAO {
     String findByAuthor(String authorName);
 
     String findByGenre(String genreName);
+
+    String findByBook(String bookName);
 }

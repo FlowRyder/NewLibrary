@@ -40,7 +40,7 @@ public class OracleDAO implements DAO {
         try {
             preparedStatement
                     = connection.prepareStatement
-                    ("INSERT INTO ACCOUNTS(STATUS,ISSUE_DATE,RETURN_DATE,ID,READER_ID,BOOK_ID) VALUES (?,?,?,?,?,?)");
+                    ("INSERT INTO ACCOUNTS(STATUS,ISSUE_DATE,RETURN_DATE,ID,READER_ID,BOOKTYPE_ID) VALUES (?,?,?,?,?,?)");
             preparedStatement.setInt(1, 1);
             preparedStatement.setDate(2, account.getIssueDate());
             preparedStatement.setDate(3, account.getReturnDate());
@@ -486,6 +486,41 @@ public class OracleDAO implements DAO {
             if (resultSet.next()) {
                 BigInteger genreID = new BigInteger(resultSet.getString(1));
                 return genreID.toString();
+            }
+        } catch (SQLException e) {
+            LOGGER.warn(e.getMessage());
+            return null;
+        } finally {
+            ConnectionPool.releaseConnection(connection);
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    LOGGER.warn(e.getMessage());
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String findByBook(String authorName) {
+        if (authorName == null) {
+            throw new IllegalArgumentException("Error: Book name shouldn't be null");
+        }
+        ResultSet resultSet = null;
+        Connection connection = ConnectionPool.getConnection();
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement =
+                    connection.prepareStatement("SELECT ID " +
+                            "FROM BOOKTYPES WHERE NAME = ?");
+            preparedStatement.setString(1, authorName);
+            preparedStatement.executeQuery();
+            resultSet = preparedStatement.getResultSet();
+            if (resultSet.next()) {
+                BigInteger authorID = new BigInteger(resultSet.getString(1));
+                return authorID.toString();
             }
         } catch (SQLException e) {
             LOGGER.warn(e.getMessage());

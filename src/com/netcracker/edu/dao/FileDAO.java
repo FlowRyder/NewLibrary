@@ -347,6 +347,21 @@ public class FileDAO implements DAO {
         return null;
     }
 
+    @Override
+    public String findByAuthor(String authorName) {
+        return null;
+    }
+
+    @Override
+    public String findByGenre(String genreName) {
+        return null;
+    }
+
+    @Override
+    public String findByBook(String bookName) {
+        return null;
+    }
+
     private FileStorage loadFileStorage() {
         FileInputStream fileInputStream;
         ObjectInputStream objectInputStream;

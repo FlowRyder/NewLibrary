@@ -25,14 +25,14 @@ public class AddAccount extends Command {
         //todo: Looks to complicated and code duplicated, maybe should perform method for set calendar
         //todo: I don't like to use index(some "magic numbers"), should be fix.
         try {
-            issueDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[2]));
-            issueDate.set(Calendar.MONTH, Integer.parseInt(parameters[3]));
-            issueDate.set(Calendar.YEAR, Integer.parseInt(parameters[4]));
-            returnDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[5]));
-            returnDate.set(Calendar.MONTH, Integer.parseInt(parameters[6]));
-            returnDate.set(Calendar.YEAR, Integer.parseInt(parameters[7]));
+            issueDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[3]));
+            issueDate.set(Calendar.MONTH, Integer.parseInt(parameters[4]));
+            issueDate.set(Calendar.YEAR, Integer.parseInt(parameters[5]));
+            returnDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(parameters[6]));
+            returnDate.set(Calendar.MONTH, Integer.parseInt(parameters[7]));
+            returnDate.set(Calendar.YEAR, Integer.parseInt(parameters[8]));
             account = new Account(Context.getLoggedHolder().getId(),
-                    new BigInteger(parameters[1]),
+                    new BigInteger(parameters[2]),
                     new Date(issueDate.getTimeInMillis()), new Date(returnDate.getTimeInMillis()));
         } catch (NullPointerException e) {
             LOGGER.warn("Error: ID shouldn't be null or negative value.");

@@ -38,6 +38,7 @@ public final class CommandEngine {
         commandMap.put("find_by_login", new FindByLogin());
         commandMap.put("find_by_author", new FindByAuthor());
         commandMap.put("find_by_genre", new FindByGenre());
+        commandMap.put("find_by_book", new FindByBook());
     }
 
     public static CommandEngine getInstance() {
